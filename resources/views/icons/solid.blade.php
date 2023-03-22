@@ -1,4 +1,4 @@
-<x-app-layout :assets="$assets ?? []">
+<x-app-layout  layout="simple" :assets="$assets ?? []">
 <div class="row">
     <div class="col-lg-12">
         <div class="card mb-4">

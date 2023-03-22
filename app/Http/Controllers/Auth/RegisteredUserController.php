@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Account;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
@@ -35,11 +36,10 @@ class RegisteredUserController extends Controller
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
+            'email' => 'required|string|email|max:255|unique:accounts',
             'password' => 'required|string|confirmed|min:8',
         ]);
-
-        Auth::login($user = User::create([
+        $account = Account::create([
             'username' => strtolower($request->first_name).strtolower($request->last_name),
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
@@ -47,11 +47,16 @@ class RegisteredUserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'user_type' => 'user'
-        ]));
+        ]);
+        $user=User::create([
+            'account_id'=>$account->id,
+            'address'=>""
+        ]);
+        Auth::login($account);
 
-        $user->assignRole('user');
+        $account->assignRole('user');
 
-        event(new Registered($user));
+        event(new Registered($account));
 
         return redirect(RouteServiceProvider::HOME);
     }

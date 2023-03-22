@@ -18,7 +18,33 @@
         </a>
     </li>
         @if(auth()->user()->hasRole('user'))
-        <li class="nav-item">
+        <li class="nav-item ">
+            <a class="nav-link {{activeRoute(route('addreservation'))}}" href="{{route('addreservation')}}">
+                <i class="icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24" fill="currentColor">
+                        <g>
+                            <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
+                        </g>
+                    </svg>
+                </i>
+                <i class="sidenav-mini-icon"> N </i>
+                <span class="item-name">Nouvelle reservation</span>
+            </a>
+        </li>
+        <li class="nav-item ">
+            <a class="nav-link {{activeRoute(route('myreservation'))}}" href="{{route('myreservation')}}">
+                <i class="icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24" fill="currentColor">
+                        <g>
+                            <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
+                        </g>
+                    </svg>
+                </i>
+                <i class="sidenav-mini-icon"> R </i>
+                <span class="item-name"> Liste Reservations </span>
+            </a>
+        </li>
+        {{--<li class="nav-item">
         <a class="nav-link" data-bs-toggle="collapse" href="#horizontal-menu" role="button" aria-expanded="false" aria-controls="horizontal-menu">
             <i class="icon">
                 <svg width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">                            <path fill-rule="evenodd" clip-rule="evenodd" d="M7.67 2H16.34C19.73 2 22 4.38 22 7.92V16.09C22 19.62 19.73 22 16.34 22H7.67C4.28 22 2 19.62 2 16.09V7.92C2 4.38 4.28 2 7.67 2ZM7.52 13.2C6.86 13.2 6.32 12.66 6.32 12C6.32 11.34 6.86 10.801 7.52 10.801C8.18 10.801 8.72 11.34 8.72 12C8.72 12.66 8.18 13.2 7.52 13.2ZM10.8 12C10.8 12.66 11.34 13.2 12 13.2C12.66 13.2 13.2 12.66 13.2 12C13.2 11.34 12.66 10.801 12 10.801C11.34 10.801 10.8 11.34 10.8 12ZM15.28 12C15.28 12.66 15.82 13.2 16.48 13.2C17.14 13.2 17.67 12.66 17.67 12C17.67 11.34 17.14 10.801 16.48 10.801C15.82 10.801 15.28 11.34 15.28 12Z" fill="currentColor"></path>
@@ -33,7 +59,7 @@
         </a>
         <ul class="sub-nav collapse" id="horizontal-menu" data-bs-parent="#sidebar">
             <li class="nav-item ">
-                <a class="nav-link {{activeRoute(route('menu-style.boxed'))}}" href="#">
+                <a class="nav-link {{activeRoute(route('addreservation'))}}" href="{{route('addreservation')}}">
                     <i class="icon">
                         <svg xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24" fill="currentColor">
                             <g>
@@ -46,7 +72,7 @@
                 </a>
             </li>
             <li class="nav-item ">
-                <a class="nav-link {{activeRoute(route('menu-style.horizontal'))}}" href="#">
+                <a class="nav-link {{activeRoute(route('addreservation'))}}" href="#">
                   <i class="icon">
                         <svg xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24" fill="currentColor">
                             <g>
@@ -59,7 +85,7 @@
                 </a>
             </li>
             <li class=" nav-item ">
-                <a class="nav-link {{activeRoute(route('menu-style.dualhorizontal'))}}" href="#">
+                <a class="nav-link {{activeRoute(route('addreservation'))}}" href="#">
                     <i class="icon">
                         <svg xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24" fill="currentColor">
                             <g>
@@ -72,7 +98,7 @@
                 </a>
             </li>
             <li class=" nav-item ">
-                <a class="nav-link {{activeRoute(route('menu-style.dualcompact'))}}" href="#">
+                <a class="nav-link {{activeRoute(route('addreservation'))}}" href="#">
                     <i class="icon svg-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24" fill="currentColor">
                             <g>
@@ -85,7 +111,7 @@
                 </a>
             </li>
         </ul>
-    </li>
+    </li>--}}
     @endif
     @if(auth()->user()->hasRole('manager')||auth()->user()->hasRole('admin')||auth()->user()->hasRole('super_admin'))
     <li><hr class="hr-horizontal"></li>
@@ -140,7 +166,7 @@
         </a>
         <ul class="sub-nav collapse" id="sidebar-special-pages" data-bs-parent="#sidebar">
             <li class=" nav-item">
-                <a class="nav-link {{activeRoute(route('special-pages.billing'))}}" href="#">
+                <a class="nav-link  {{activeRoute(route('config.indexlocal'))}}" href="{{route('config.indexlocal')}}">
                   <i class="icon">
                         <svg xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24" fill="currentColor">
                             <g>
@@ -153,7 +179,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link  {{activeRoute(route('special-pages.calender'))}}" href="#">
+                <a class="nav-link {{activeRoute(route('config.indexgrouplocal'))}}" href="{{route('config.indexgrouplocal')}}">
                     <i class="icon">
                         <svg xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24" fill="currentColor">
                             <g>
@@ -166,7 +192,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{activeRoute(route('special-pages.kanban'))}}" href="#">
+                <a class="nav-link {{activeRoute(route('config.indexperiode'))}}" href="{{route('config.indexperiode')}}">
                    <i class="icon">
                         <svg xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24" fill="currentColor">
                             <g>
@@ -175,11 +201,11 @@
                         </svg>
                     </i>
                    <i class="sidenav-mini-icon"> P </i>
-                   <span class="item-name">Periode</span>
+                   <span class="item-name">Periode reservation</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{activeRoute(route('special-pages.pricing'))}}" href="#">
+                <a class="nav-link {{activeRoute(route('config.indextypejour'))}}"  href="{{route('config.indextypejour')}}">
                     <i class="icon">
                         <svg xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24" fill="currentColor">
                             <g>
@@ -187,12 +213,12 @@
                             </g>
                         </svg>
                     </i>
-                    <i class="sidenav-mini-icon"> J </i>
-                    <span class="item-name">Jours Fériés</span>
+                    <i class="sidenav-mini-icon"> TJ </i>
+                    <span class="item-name">Type de jour</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{activeRoute(route('special-pages.rtlsupport'))}}" href="#">
+                <a class="nav-link {{activeRoute(route('config.indextypesalle'))}}" href="{{route('config.indextypesalle')}}">
                     <i class="icon">
                         <svg xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24" fill="currentColor">
                             <g>
@@ -200,12 +226,12 @@
                             </g>
                         </svg>
                     </i>
-                    <i class="sidenav-mini-icon"> C </i>
-                    <span class="item-name">Congés scolaire</span>
+                    <i class="sidenav-mini-icon"> TS </i>
+                    <span class="item-name">Type de salle</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{activeRoute(route('special-pages.timeline'))}}" href="#">
+                <a class="nav-link {{activeRoute(route('config.indextypeaccessoire'))}}" href="{{route('config.indextypeaccessoire')}}">
                     <i class="icon">
                         <svg xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24" fill="currentColor">
                             <g>
@@ -214,13 +240,13 @@
                         </svg>
                     </i>
                     <i class="sidenav-mini-icon"> A </i>
-                    <span class="item-name">Accessoires</span>
+                    <span class="item-name">Type Accessoires</span>
                 </a>
             </li>
         </ul>
     </li>
     <li class="nav-item">
-        <a class="nav-link" aria-current="page" href="#" target="_blank">
+        <a class="nav-link {{activeRoute(route('users.index'))}}" aria-current="page" href="{{route('users.index')}}">
             <i class="icon">
                 <svg width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">                                <path fill-rule="evenodd" clip-rule="evenodd" d="M14.2124 7.76241C14.2124 10.4062 12.0489 12.5248 9.34933 12.5248C6.6507 12.5248 4.48631 10.4062 4.48631 7.76241C4.48631 5.11865 6.6507 3 9.34933 3C12.0489 3 14.2124 5.11865 14.2124 7.76241ZM2 17.9174C2 15.47 5.38553 14.8577 9.34933 14.8577C13.3347 14.8577 16.6987 15.4911 16.6987 17.9404C16.6987 20.3877 13.3131 21 9.34933 21C5.364 21 2 20.3666 2 17.9174ZM16.1734 7.84875C16.1734 9.19506 15.7605 10.4513 15.0364 11.4948C14.9611 11.6021 15.0276 11.7468 15.1587 11.7698C15.3407 11.7995 15.5276 11.8177 15.7184 11.8216C17.6167 11.8704 19.3202 10.6736 19.7908 8.87118C20.4885 6.19676 18.4415 3.79543 15.8339 3.79543C15.5511 3.79543 15.2801 3.82418 15.0159 3.87688C14.9797 3.88454 14.9405 3.90179 14.921 3.93246C14.8955 3.97174 14.9141 4.02253 14.9396 4.05607C15.7233 5.13216 16.1734 6.44206 16.1734 7.84875ZM19.3173 13.7023C20.5932 13.9466 21.4317 14.444 21.7791 15.1694C22.0736 15.7635 22.0736 16.4534 21.7791 17.0475C21.2478 18.1705 19.5335 18.5318 18.8672 18.6247C18.7292 18.6439 18.6186 18.5289 18.6333 18.3928C18.9738 15.2805 16.2664 13.8048 15.5658 13.4656C15.5364 13.4493 15.5296 13.4263 15.5325 13.411C15.5345 13.4014 15.5472 13.3861 15.5697 13.3832C17.0854 13.3545 18.7155 13.5586 19.3173 13.7023Z" fill="currentColor"></path>
                 </svg>
@@ -229,14 +255,23 @@
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" aria-current="page" href="#">
+        <a class="nav-link {{activeRoute(route('gestionnaires.index'))}}" href="{{route('gestionnaires.index')}}" aria-current="page">
             <i class="icon">
                 <svg width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">                                <path fill-rule="evenodd" clip-rule="evenodd" d="M9.5 12.5537C12.2546 12.5537 14.4626 10.3171 14.4626 7.52684C14.4626 4.73663 12.2546 2.5 9.5 2.5C6.74543 2.5 4.53737 4.73663 4.53737 7.52684C4.53737 10.3171 6.74543 12.5537 9.5 12.5537ZM9.5 15.0152C5.45422 15.0152 2 15.6621 2 18.2464C2 20.8298 5.4332 21.5 9.5 21.5C13.5448 21.5 17 20.8531 17 18.2687C17 15.6844 13.5668 15.0152 9.5 15.0152ZM19.8979 9.58786H21.101C21.5962 9.58786 22 9.99731 22 10.4995C22 11.0016 21.5962 11.4111 21.101 11.4111H19.8979V12.5884C19.8979 13.0906 19.4952 13.5 18.999 13.5C18.5038 13.5 18.1 13.0906 18.1 12.5884V11.4111H16.899C16.4027 11.4111 16 11.0016 16 10.4995C16 9.99731 16.4027 9.58786 16.899 9.58786H18.1V8.41162C18.1 7.90945 18.5038 7.5 18.999 7.5C19.4952 7.5 19.8979 7.90945 19.8979 8.41162V9.58786Z" fill="currentColor"></path>
                 </svg>
             </i>
-            <span>Personnels<span class="badge rounded-pill bg-success"></span></span>
+            <span>Gestionnaires<span class="badge rounded-pill bg-success"></span></span>
         </a>
     </li>
+        <li class="nav-item">
+            <a class="nav-link {{activeRoute(route('personnels.index'))}}" href="{{route('personnels.index')}}" aria-current="page">
+                <i class="icon">
+                    <svg width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">                                <path fill-rule="evenodd" clip-rule="evenodd" d="M9.5 12.5537C12.2546 12.5537 14.4626 10.3171 14.4626 7.52684C14.4626 4.73663 12.2546 2.5 9.5 2.5C6.74543 2.5 4.53737 4.73663 4.53737 7.52684C4.53737 10.3171 6.74543 12.5537 9.5 12.5537ZM9.5 15.0152C5.45422 15.0152 2 15.6621 2 18.2464C2 20.8298 5.4332 21.5 9.5 21.5C13.5448 21.5 17 20.8531 17 18.2687C17 15.6844 13.5668 15.0152 9.5 15.0152ZM19.8979 9.58786H21.101C21.5962 9.58786 22 9.99731 22 10.4995C22 11.0016 21.5962 11.4111 21.101 11.4111H19.8979V12.5884C19.8979 13.0906 19.4952 13.5 18.999 13.5C18.5038 13.5 18.1 13.0906 18.1 12.5884V11.4111H16.899C16.4027 11.4111 16 11.0016 16 10.4995C16 9.99731 16.4027 9.58786 16.899 9.58786H18.1V8.41162C18.1 7.90945 18.5038 7.5 18.999 7.5C19.4952 7.5 19.8979 7.90945 19.8979 8.41162V9.58786Z" fill="currentColor"></path>
+                    </svg>
+                </i>
+                <span>Administrateurs<span class="badge rounded-pill bg-success"></span></span>
+            </a>
+        </li>
     <li class="nav-item">
         <a class="nav-link" data-bs-toggle="collapse" href="#sidebar-roles" role="button"  aria-expanded="false" aria-controls="sidebar-special-pages">
             <i class="icon">

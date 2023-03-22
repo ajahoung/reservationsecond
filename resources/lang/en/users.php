@@ -15,4 +15,7 @@ return [
     'title' => 'Users',
     'store' => 'User info added successfully!',
     'update' => 'User info updated successfully!',
+    'users.store'=>[
+        'message.msg_added'=>"Add success"
+    ]
 ];

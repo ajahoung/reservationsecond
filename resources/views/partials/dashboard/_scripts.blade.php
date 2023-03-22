@@ -50,3 +50,15 @@
 <!-- Custom JavaScript -->
 <script src="{{asset('js/hope-ui.js') }}"></script>
 <script src="{{asset('js/modelview.js')}}"></script>
+<script>
+    var configs={
+        routes:{
+            index: "{{\Illuminate\Support\Facades\URL::to('/')}}",
+            myreservation: "{{\Illuminate\Support\Facades\URL::to('myreservation')}}",
+            startreservation: "{{\Illuminate\Support\Facades\URL::to('reservation/addhome')}}",
+            reservation_getsalle: "{{\Illuminate\Support\Facades\URL::route('ajaxgetsalle')}}",
+            ajaxpostreservation: "{{\Illuminate\Support\Facades\URL::route('ajaxpostreservation')}}",
+            calendarevent: "{{\Illuminate\Support\Facades\URL::to('calendarevent')}}",
+        }
+    }
+</script>

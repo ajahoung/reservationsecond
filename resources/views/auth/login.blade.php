@@ -1,5 +1,5 @@
 <x-guest-layout>
-   <section class="login-content">
+{{--  <section class="login-content">
       <div class="row m-0 align-items-center bg-white vh-100">
          <div class="col-md-6">
             <div class="row justify-content-center">
@@ -54,16 +54,7 @@
                            <div class="d-flex justify-content-center">
                               <ul class="list-group list-group-horizontal list-group-flush">
                                  <li class="list-group-item border-0 pb-0">
-                                    <a href="#"><img src="{{asset('images/brands/fb.svg')}}" alt="fb"></a>
-                                 </li>
-                                 <li class="list-group-item border-0 pb-0">
                                     <a href="#"><img src="{{asset('images/brands/gm.svg')}}" alt="gm"></a>
-                                 </li>
-                                 <li class="list-group-item border-0 pb-0">
-                                    <a href="#"><img src="{{asset('images/brands/im.svg')}}" alt="im"></a>
-                                 </li>
-                                 <li class="list-group-item border-0 pb-0">
-                                    <a href="#"><img src="{{asset('images/brands/li.svg')}}" alt="li"></a>
                                  </li>
                               </ul>
                            </div>
@@ -90,5 +81,84 @@
             <img src="{{asset('images/auth/01.png')}}" class="img-fluid gradient-main animated-scaleX" alt="images">
          </div>
       </div>
-   </section>
+   </section>--}}
+    <section class="fxt-template-animation fxt-template-layout11">
+        <div class="container">
+            <x-auth-session-status class="mb-4" :status="session('status')" />
+
+            <!-- Validation Errors -->
+            <x-auth-validation-errors class="mb-4" :errors="$errors" />
+            <div class="row align-items-center justify-content-center">
+                <div class="col-xl-6 col-lg-7 col-sm-12 col-12 fxt-bg-color">
+                    <div class="fxt-content">
+                        <div class="fxt-header">
+                            <a href="{{route('index')}}" class="fxt-logo">
+                                <svg width="60" class="text-primary" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect x="-0.757324" y="19.2427" width="28" height="4" rx="2" transform="rotate(-45 -0.757324 19.2427)" fill="currentColor"></rect>
+                                    <rect x="7.72803" y="27.728" width="28" height="4" rx="2" transform="rotate(-45 7.72803 27.728)" fill="currentColor"></rect>
+                                    <rect x="10.5366" y="16.3945" width="16" height="4" rx="2" transform="rotate(45 10.5366 16.3945)" fill="currentColor"></rect>
+                                    <rect x="10.5562" y="-0.556152" width="28" height="4" rx="2" transform="rotate(45 10.5562 -0.556152)" fill="currentColor"></rect>
+                                </svg>
+                                {{--<img src="img/logo-11.png" alt="{{env('APP_NAME')}}">--}}</a>
+                            <p>Login into your application</p>
+                        </div>
+                        <div class="fxt-form">
+                            <form method="POST" action="{{ route('login') }}">
+                                {{csrf_field()}}
+                                <div class="form-group">
+                                    <div class="fxt-transformY-50 fxt-transition-delay-1">
+                                        <input type="email" id="email" class="form-control" name="email"  value="{{env('IS_DEMO') ? 'admin@example.com' : old('email')}}"  placeholder="Email" required="required">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="fxt-transformY-50 fxt-transition-delay-2">
+                                        <input id="password" type="password" class="form-control" name="password" placeholder="********" required="required">
+                                        <i toggle="#password" class="fa fa-fw fa-eye toggle-password field-icon"></i>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="fxt-transformY-50 fxt-transition-delay-3">
+                                        <div class="fxt-checkbox-area">
+                                            <div class="checkbox">
+                                                <input id="checkbox1" type="checkbox">
+                                                <label for="checkbox1">Keep me logged in</label>
+                                            </div>
+                                            <a href="#" class="switcher-text">Forgot Password</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="fxt-transformY-50 fxt-transition-delay-4">
+                                        <button type="submit" class="fxt-btn-fill">Log in</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="fxt-style-line">
+                            <div class="fxt-transformY-50 fxt-transition-delay-5">
+                                <h3>Or Login With</h3>
+                            </div>
+                        </div>
+                        <ul class="fxt-socials">
+                            <li class="fxt-google">
+                                <div class="fxt-transformY-50 fxt-transition-delay-6">
+                                    <a href="{{ route('socialite.redirect', 'google') }}" title="Connexion/Inscription avec Google"><i class="fab fa-google"></i><span>Google </span></a>
+                                </div>
+                            </li>
+                            {{--<li class="fxt-twitter">
+                                <div class="fxt-transformY-50 fxt-transition-delay-7">
+                                    <a href="#" title="twitter"><i class="fab fa-twitter"></i><span>Twitter</span></a>
+                                </div>
+                            </li>
+                            <li class="fxt-facebook">
+                                <div class="fxt-transformY-50 fxt-transition-delay-8">
+                                    <a href="#" title="Facebook"><i class="fab fa-facebook-f"></i><span>Facebook</span></a>
+                                </div>
+                            </li>--}}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 </x-guest-layout>

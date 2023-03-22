@@ -25,9 +25,31 @@ if (document.querySelectorAll('#calendar1').length) {
       dateClick: function (info) {
           $('#schedule-start-date').val(info.dateStr)
           $('#schedule-end-date').val(info.dateStr)
-          $('#date-event').modal('show')
+        //  $('#date-event').modal('show')
+          var SITE_URL="{{ url('/'}} ";
+          console.log(info.dateStr)
+          window.location=configs.routes.startreservation+"?date="+info.dateStr;
+/*          $.ajaxSetup({
+              headers: {
+                  'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+              }
+          })
+          $.ajax({
+              url:configs.routes.startreservation,
+              data:{
+                  date:info.date,
+              },
+              type:"POST",
+              success:function (data) {
+                  $('#date-event').modal('show')
+              },
+              error: function (error) {
+
+              }
+          })*/
       },
-      events: [
+        events:configs.routes.calendarevent
+     /* events: [
         {
             title: 'Click for Google',
             url: 'http://google.com/',
@@ -165,9 +187,9 @@ if (document.querySelectorAll('#calendar1').length) {
             textColor: 'rgba(58,87,232,1)',
             borderColor: 'rgba(58,87,232,1)'
         }
-      ]
+      ]*/
   });
   calendar1.render();
   });
-  
+
 }

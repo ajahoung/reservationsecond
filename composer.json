@@ -8,17 +8,20 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^7.3|^8.1.*",
+        "php": "^7.3|^8.1",
+        "ext-json": "*",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^8.12",
+        "laravel/socialite": "^5.6",
         "laravel/tinker": "^2.5",
         "laravelcollective/html": "^6.2",
         "spatie/laravel-medialibrary": "^9.0.0",
         "spatie/laravel-permission": "^5.3",
         "yajra/laravel-datatables": "^1.5",
-        "yajra/laravel-datatables-oracle": "~9.0"
+        "yajra/laravel-datatables-oracle": "~9.0",
+      "ext-calendar": "*"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

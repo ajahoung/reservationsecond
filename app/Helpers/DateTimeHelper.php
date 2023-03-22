@@ -49,4 +49,31 @@ class DateTimeHelper {
         $diff_time = \Carbon\Carbon::createFromTimeStamp($date);
         return $diff_time;
     }
+    public static function getDayByNumber($day){
+        $val="";
+        switch ($day){
+            case 1:
+                $val="LUN";
+                break;
+            case 2:
+                $val="MAR";
+                break;
+            case 3:
+                $val="MER";
+                break;
+            case 4:
+                $val="JEU";
+                break;
+            case 5:
+                $val="VEND";
+                break;
+            case 6:
+                $val="SAM";
+                break;
+            case 0:
+                $val="DIM";
+                break;
+        }
+        return $val;
+    }
 }

@@ -1,5 +1,6 @@
 $(document).on('click', '[data-modal-form="form"]', function () {
 
+
     $("#formModal input ,#formModal select,#formModal textarea").prop("disabled", false);
     var app_title = $(this).attr('data-app-title');
     var app_size = $(this).attr('data-size');
