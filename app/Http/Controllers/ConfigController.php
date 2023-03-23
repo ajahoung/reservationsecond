@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\DataTables\AccessoireDataTable;
 use App\DataTables\GroupLocalDataTable;
+use App\DataTables\JourFerieDataTable;
 use App\DataTables\LocalDataTable;
 use App\DataTables\PeriodeDataTable;
 use App\DataTables\TypeJourDataTable;
 use App\DataTables\TypeSalleDataTable;
 use App\Helpers\AuthHelper;
 use App\Models\GroupLocal;
+use App\Models\JourFerie;
 use App\Models\Local;
 use App\Models\Periode;
 use App\Models\TypeAccessoire;
@@ -35,6 +37,20 @@ class ConfigController extends Controller
         $auth_user = AuthHelper::authSession();
         $assets = ['data-table'];
         $headerAction = '<a href="#" class="btn btn-sm btn-primary" role="button" data-app-title="Ajouter un local" data-bs-toggle="tooltip" data-modal-form="form" data-icon="person_add" data-size="small" data--href="' . route('config.createlocal') . '"><i class="fa fa-plus"></i>Ajouter</a>';
+        return $dataTable->render('global.datatable', compact('pageTitle', 'auth_user', 'assets', 'headerAction'));
+    }
+    /**
+     * Display a listing of the resource.
+     *
+     * @param LocalDataTable $dataTable
+     * @return Response
+     */
+    public function indexjourferie(JourFerieDataTable $dataTable)
+    {
+        $pageTitle = "Congés & feriés";
+        $auth_user = AuthHelper::authSession();
+        $assets = ['data-table'];
+        $headerAction = '<a href="#" class="btn btn-sm btn-primary" role="button" data-app-title="Ajouter un ferié" data-bs-toggle="tooltip" data-modal-form="form" data-icon="person_add" data-size="small" data--href="' . route('config.createjourferie') . '"><i class="fa fa-plus"></i>Ajouter</a>';
         return $dataTable->render('global.datatable', compact('pageTitle', 'auth_user', 'assets', 'headerAction'));
     }
     /**
@@ -125,6 +141,18 @@ class ConfigController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
+    public function createjourferie(Request $request)
+    {
+        $app_title="text";
+        $view = view('administration.form-jourferie',compact('app_title'))->render();
+        return response()->json(['data' => $view, 'status' => true]);
+    }
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function createtypesalle(Request $request)
     {
         $view = view('administration.form-typesalle')->render();
@@ -198,6 +226,28 @@ class ConfigController extends Controller
             return redirect()->route('config.indexgrouplocal')->withSuccess(__('Save success', ['name' => __('users.store')]));
         } else {
             return redirect()->route('indexgrouplocal.indexgrouplocal')->withErrors(__('update', ['name' => __('users.store')]));
+        }
+
+    }
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function storejourferie(Request $request)
+    {
+        $local = new JourFerie();
+        $local->libelle = $request->libelle;
+        $local->date_debut = $request->datedebut;
+        $local->date_fin = $request->datefin;
+        $local->active = $request->active="on"?true:false;
+        $local->save();
+        $b_ool = $local->save();
+        if ($b_ool) {
+            return redirect()->route('config.indexjourferie')->withSuccess(__('Save success', ['name' => __('users.store')]));
+        } else {
+            return redirect()->route('config.indexjourferie')->withErrors(__('message.msg_added', ['name' => __('users.store')]));
         }
 
     }

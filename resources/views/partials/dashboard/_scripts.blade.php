@@ -59,6 +59,7 @@
             reservation_getsalle: "{{\Illuminate\Support\Facades\URL::route('ajaxgetsalle')}}",
             ajaxpostreservation: "{{\Illuminate\Support\Facades\URL::route('ajaxpostreservation')}}",
             calendarevent: "{{\Illuminate\Support\Facades\URL::to('calendarevent')}}",
+            commentairereservation: "{{\Illuminate\Support\Facades\URL::to('reservation/comment')}}",
         }
     }
 </script>

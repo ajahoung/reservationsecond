@@ -141,7 +141,8 @@
                     ob: jsonObj, local: $('#locaux  option:selected').val()
                     , periode: $('#periode option:selected').val(),end: $('#r_time_end').val(),
                     date_reservation: $('#r_date').val(),start: $('#r_time').val(),
-                    group_local: $('#group_local').val()
+                    group_local: $('#group_local').val(),
+                    jour_type: $('#jour_type').val()
                 }),
                 success: function (data) {
                     console.log(data)
@@ -214,6 +215,7 @@
         </div>
     </div>
     <div class="container">
+        <input value="{{$type_jour}}"  id="jour_type" type="hidden">
         <div class="row">
             <div class="col-sm-12">
                 <div class="card">
@@ -223,13 +225,17 @@
                         </div>
                     </div>
                     <div class="card-body px-3">
-
+                        @if(is_null($conge))
+                            <h4 class="badge badge-lg btn-success">Reservation pendant periode contengeant </h4>
+                        @else
+                        <h4 class="badge badge-lg btn-danger">Reservation pendant periode hors contengeant: $conge->libelle </h4>
+                        @endif
                         <div class="row" id="step-1">
-                            <div class="col-md-4" hidden>
+                            <div class="col-md-6" hidden>
                                 <label class="form-label" for="r_time">Date de reservation: </label>
                                 <input type="date" value="{{$date}}" class="form-control" id="r_date">
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <label class="form-label">Periode: <span class="text-danger">*</span></label>
                                 <select class="form-select" id="periode">
                                     @foreach($periodes as $periode)
@@ -239,7 +245,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="form-group col-md-4 mt-2">
+                            <div class="form-group col-md-6 mt-2">
                                 <label class="form-label">Type de salle: <span class="text-danger">*</span></label>
                                 <select class="form-select" id="typesalle">
                                     <option>selectionnez type salle</option>
@@ -248,19 +254,16 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="form-group col-md-4 mt-2">
+                           {{-- <div class="form-group col-md-4 mt-2">
                                 <label class="form-label">Type de jours: <span class="text-danger">*</span></label>
                                 <select class="form-select" id="typejour">
                                     <option>selectionnez type jour</option>
-                                   {{-- @foreach($typejours as $jour)
-                                        <option value="{{$jour->id}}">{{ $jour->type }}</option>
-                                    @endforeach--}}
                                     <option value="1">Jours scolaires</option>
                                     <option value="2">Jours feriés</option>
                                     <option value="3">Weekends</option>
                                     <option value="4">Congés</option>
                                 </select>
-                            </div>
+                            </div>--}}
                           {{--  <h5>Horaire de reservation</h5>
                             <div class="col-md-12 mt-2 mb-3">
                                 <div class="form-check col-md-4"><input class="form-check-input"  value="08h25-15h45" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
@@ -272,14 +275,20 @@
                             <div class="col-md-6">
                                 <label class="form-label" for="r_time">Heure de debut: </label>
                                 <select class="form-select" id="r_time">
+                                    <option>selectionnez heure de debut</option>
+                                    @foreach($heuredebuts as $heure)
+                                        <option value="{{ $heure }}">{{ $heure }}</option>
+                                    @endforeach
                                 </select>
-                                {{--<input type="time" class="form-control" id="r_time_begin">--}}
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label" for="r_time">Heure de fin: </label>
                                 <select class="form-select" id="r_time_end">
+                                    <option>selectionnez heure de fin</option>
+                                    @foreach($heurefins as $heure)
+                                        <option value="{{ $heure }}">{{ $heure }}</option>
+                                    @endforeach
                                 </select>
-                                {{-- <input type="time" class="form-control" id="r_time_end">--}}
                             </div>
                         </div>
                         <div class="row px-3" id="step-2">

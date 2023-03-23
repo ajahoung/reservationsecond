@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTableCommentaire extends Migration
+class CreateTableFerieConge extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,12 @@ class CreateTableCommentaire extends Migration
      */
     public function up()
     {
-        Schema::create('commentaire', function (Blueprint $table) {
+        Schema::create('ferie_conge', function (Blueprint $table) {
             $table->id();
-            $table->string("message");
-            $table->foreignId("reservation_id");
-            $table->foreignId("gestionnaire_id")->nullable(true);
+            $table->string('libelle');
+            $table->date('date_debut');
+            $table->date('date_fin');
+            $table->boolean('active');
             $table->timestamps();
         });
     }
@@ -29,6 +30,6 @@ class CreateTableCommentaire extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('commentaire');
+        Schema::dropIfExists('table__jour_ferie');
     }
 }

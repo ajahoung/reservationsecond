@@ -19,11 +19,7 @@ class LocalDataTable extends DataTable
     public function dataTable($query)
     {
         return datatables()
-            ->eloquent($query)
-            ->editColumn('group_locals', function($query) {
-
-                return $query->libelle;
-            });
+            ->eloquent($query);
 
     }
 
@@ -71,7 +67,7 @@ class LocalDataTable extends DataTable
         return [
             Column::make('id'),
             Column::make('libelle'),
-            Column::make('group_locals'),
+            //Column::make('group_locals'),
         ];
     }
 

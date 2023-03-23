@@ -17,7 +17,7 @@
             <span class="item-name">Dashboard</span>
         </a>
     </li>
-        @if(auth()->user()->hasRole('user'))
+
         <li class="nav-item ">
             <a class="nav-link {{activeRoute(route('addreservation'))}}" href="{{route('addreservation')}}">
                 <i class="icon">
@@ -41,78 +41,10 @@
                     </svg>
                 </i>
                 <i class="sidenav-mini-icon"> R </i>
-                <span class="item-name"> Liste Reservations </span>
+                <span class="item-name"> Mes Reservations </span>
             </a>
         </li>
-        {{--<li class="nav-item">
-        <a class="nav-link" data-bs-toggle="collapse" href="#horizontal-menu" role="button" aria-expanded="false" aria-controls="horizontal-menu">
-            <i class="icon">
-                <svg width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">                            <path fill-rule="evenodd" clip-rule="evenodd" d="M7.67 2H16.34C19.73 2 22 4.38 22 7.92V16.09C22 19.62 19.73 22 16.34 22H7.67C4.28 22 2 19.62 2 16.09V7.92C2 4.38 4.28 2 7.67 2ZM7.52 13.2C6.86 13.2 6.32 12.66 6.32 12C6.32 11.34 6.86 10.801 7.52 10.801C8.18 10.801 8.72 11.34 8.72 12C8.72 12.66 8.18 13.2 7.52 13.2ZM10.8 12C10.8 12.66 11.34 13.2 12 13.2C12.66 13.2 13.2 12.66 13.2 12C13.2 11.34 12.66 10.801 12 10.801C11.34 10.801 10.8 11.34 10.8 12ZM15.28 12C15.28 12.66 15.82 13.2 16.48 13.2C17.14 13.2 17.67 12.66 17.67 12C17.67 11.34 17.14 10.801 16.48 10.801C15.82 10.801 15.28 11.34 15.28 12Z" fill="currentColor"></path>
-                </svg>
-            </i>
-            <span class="item-name">Mes reservations</span>
-            <i class="right-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                </svg>
-            </i>
-        </a>
-        <ul class="sub-nav collapse" id="horizontal-menu" data-bs-parent="#sidebar">
-            <li class="nav-item ">
-                <a class="nav-link {{activeRoute(route('addreservation'))}}" href="{{route('addreservation')}}">
-                    <i class="icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24" fill="currentColor">
-                            <g>
-                                <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
-                            </g>
-                        </svg>
-                    </i>
-                    <i class="sidenav-mini-icon"> N </i>
-                    <span class="item-name">Nouvelle reservation</span>
-                </a>
-            </li>
-            <li class="nav-item ">
-                <a class="nav-link {{activeRoute(route('addreservation'))}}" href="#">
-                  <i class="icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24" fill="currentColor">
-                            <g>
-                            <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
-                            </g>
-                        </svg>
-                    </i>
-                  <i class="sidenav-mini-icon"> E </i>
-                  <span class="item-name"> Encours </span>
-                </a>
-            </li>
-            <li class=" nav-item ">
-                <a class="nav-link {{activeRoute(route('addreservation'))}}" href="#">
-                    <i class="icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24" fill="currentColor">
-                            <g>
-                            <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
-                            </g>
-                        </svg>
-                    </i>
-                    <i class="sidenav-mini-icon"> T </i>
-                    <span class="item-name">Terminés</span>
-                </a>
-            </li>
-            <li class=" nav-item ">
-                <a class="nav-link {{activeRoute(route('addreservation'))}}" href="#">
-                    <i class="icon svg-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24" fill="currentColor">
-                            <g>
-                            <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
-                            </g>
-                        </svg>
-                    </i>
-                    <i class="sidenav-mini-icon"> R </i>
-                    <span class="item-name">Refusés</span>
-                </a>
-            </li>
-        </ul>
-    </li>--}}
-    @endif
+
     @if(auth()->user()->hasRole('manager')||auth()->user()->hasRole('admin')||auth()->user()->hasRole('super_admin'))
     <li><hr class="hr-horizontal"></li>
     <li class="nav-item static-item">
@@ -205,19 +137,6 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{activeRoute(route('config.indextypejour'))}}"  href="{{route('config.indextypejour')}}">
-                    <i class="icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24" fill="currentColor">
-                            <g>
-                            <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
-                            </g>
-                        </svg>
-                    </i>
-                    <i class="sidenav-mini-icon"> TJ </i>
-                    <span class="item-name">Type de jour</span>
-                </a>
-            </li>
-            <li class="nav-item">
                 <a class="nav-link {{activeRoute(route('config.indextypesalle'))}}" href="{{route('config.indextypesalle')}}">
                     <i class="icon">
                         <svg xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24" fill="currentColor">
@@ -241,6 +160,19 @@
                     </i>
                     <i class="sidenav-mini-icon"> A </i>
                     <span class="item-name">Type Accessoires</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{activeRoute(route('config.indexjourferie'))}}" href="{{route('config.indexjourferie')}}">
+                    <i class="icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24" fill="currentColor">
+                            <g>
+                                <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
+                            </g>
+                        </svg>
+                    </i>
+                    <i class="sidenav-mini-icon"> JF </i>
+                    <span class="item-name">Congés & Feriés</span>
                 </a>
             </li>
         </ul>

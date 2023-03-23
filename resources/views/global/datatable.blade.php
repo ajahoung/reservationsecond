@@ -5,6 +5,22 @@
             //alert(id)
             $('#reservation_id').val(id)
         }
+        function getComment(id) {
+            $('#reservation_id').val(id)
+            $.ajax({
+                url: configs.routes.commentairereservation,
+                data: {
+                    reservation: id
+                },
+                type: "GET",
+                success: function (data) {
+                    $('#message').text(data.message)
+                },
+                error: function (error) {
+
+                }
+            })
+        }
     </script>
 @endpush
 <x-app-layout :assets="$assets ?? []">
@@ -30,6 +46,24 @@
    </div>
 </div>
 </x-app-layout>
+<div class="modal fade" id="comment-reservation" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="formTitle">Commentaire</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="main_form">
+                    <div class="col-md-12">
+                        <label class="form-label" for="r_time" id="message"></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="modal fade" id="refused-reservation" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">

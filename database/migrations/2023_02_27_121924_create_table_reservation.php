@@ -17,6 +17,7 @@ class CreateTableReservation extends Migration
             $table->id();
             $table->string("libelle");
             $table->string("start");
+            $table->string("contegent");
             $table->string("end");
             $table->string("status");
             $table->dateTime("date_reservation");

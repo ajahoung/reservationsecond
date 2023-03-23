@@ -39,7 +39,7 @@ Route::get('/month', [HomeController::class, 'agenda_month'])->name('agenda_mont
 Route::get('/week', [HomeController::class, 'agenda_week'])->name('agenda_week');
 Route::get('/day', [HomeController::class, 'agenda_day'])->name('agenda_day');
 Route::get('/calendarevent', [HomeController::class, 'calendarevent'])->name('calendarevent');
-Route::get('ajax/getsalle', [HomeController::class, 'ajaxgetsalle'])->name('ajaxgetsalle');
+
 //Icons Page Routs
 Route::group(['prefix' => 'icons'], function() {
     Route::get('solid', [HomeController::class, 'solid'])->name('icons.solid');
@@ -60,6 +60,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('reservation/denier', [HomeController::class, 'annulerreservation'])->name('annulerreservation');
     Route::get('reservation/{id}/activate', [HomeController::class, 'activatereservation'])->name('activatereservation');
     Route::get('reservation/{id}/delete', [HomeController::class, 'deletereservation'])->name('deletereservation');
+    Route::get('reservation/comment', [HomeController::class, 'commentairereservation'])->name('commentairereservation');
     // Users Module
     Route::resource('users', UserController::class);
 
@@ -75,6 +76,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/indextypesalle', [ConfigController::class, 'indextypesalle'])->name('config.indextypesalle');
     Route::get('/indextypejour', [ConfigController::class, 'indextypejour'])->name('config.indextypejour');
     Route::get('/indexperiode', [ConfigController::class, 'indexperiode'])->name('config.indexperiode');
+    Route::get('/indexjourferie', [ConfigController::class, 'indexjourferie'])->name('config.indexjourferie');
     Route::get('/indextypeaccessoire', [ConfigController::class, 'indextypeaccessoire'])->name('config.indextypeaccessoire');
 
     Route::get('/createlocal', [ConfigController::class, 'createlocal'])->name('config.createlocal');
@@ -83,6 +85,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/createtypejour', [ConfigController::class, 'createtypejour'])->name('config.createtypejour');
     Route::get('/createperiode', [ConfigController::class, 'createperiode'])->name('config.createperiode');
     Route::get('/createtypeaccessoire', [ConfigController::class, 'createtypeaccessoire'])->name('config.createtypeaccessoire');
+    Route::get('/createjourferie', [ConfigController::class, 'createjourferie'])->name('config.createjourferie');
 
     Route::post('config/storecreneaux', [ConfigController::class, 'storecreneaux'])->name('config.storecreneaux');
     Route::post('config/storetypeaccessoire', [ConfigController::class, 'storetypeaccessoire'])->name('config.storetypeaccessoire');
@@ -91,12 +94,14 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('config/storelocal', [ConfigController::class, 'storelocal'])->name('config.storelocal');
     Route::post('config/storegrouplocal', [ConfigController::class, 'storegrouplocal'])->name('config.storegrouplocal');
     Route::post('config/storeperiode', [ConfigController::class, 'storeperiode'])->name('config.storeperiode');
-/// Reservation routes
+    Route::post('config/storejourferie', [ConfigController::class, 'storejourferie'])->name('config.storejourferie');
+
+    /// Reservation routes
     Route::get('reservation/start', [HomeController::class, 'startreservation'])->name('startreservation');
     Route::get('reservation/add', [HomeController::class, 'addreservation'])->name('addreservation');
     Route::get('reservation/addhome', [HomeController::class, 'addreservation_home'])->name('addreservation_home');
     Route::post('ajax/postreservation', [HomeController::class, 'ajaxpostreservation'])->name('ajaxpostreservation');
- 
+    Route::get('ajax/getsalle', [HomeController::class, 'ajaxgetsalle'])->name('ajaxgetsalle');
 });
 //Auth pages Routs
 Route::group(['prefix' => 'auth'], function() {

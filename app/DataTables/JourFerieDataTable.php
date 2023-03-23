@@ -2,15 +2,14 @@
 
 namespace App\DataTables;
 
-use App\Models\GroupLocal;
-use Illuminate\Database\Eloquent\Builder;
+use App\Models\JourFerie;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
 
-class GroupLocalDataTable extends DataTable
+class JourFerieDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -22,26 +21,18 @@ class GroupLocalDataTable extends DataTable
     {
         return datatables()
             ->eloquent($query)
-            ->editColumn('type_jour_id', function ($query) {
-                if ($query->type_jour_id==1){
-                    return "Jours scolaire";
-                }else{
-                    return "Congés & Féries";
-                }
-
-            });
+            ->addColumn('action', 'jourferie.action');
     }
 
     /**
      * Get query source of dataTable.
      *
-     * @return Builder
+     * @param \App\Models\JourFerie $model
+     * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query()
+    public function query(JourFerie $model)
     {
-        $model = GroupLocal::query()
-            ->with('typesalle');
-        return $this->applyScopes($model);
+        return $model->newQuery();
     }
 
     /**
@@ -52,7 +43,7 @@ class GroupLocalDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-                    ->setTableId('grouplocal-table')
+                    ->setTableId('jourferie-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
                     ->dom('Bfrtip')
@@ -74,11 +65,10 @@ class GroupLocalDataTable extends DataTable
     protected function getColumns()
     {
         return [
+            Column::make('id'),
             Column::make('libelle'),
-            Column::make('typesalle.type'),
-           // ['data' => 'typesalle.type', 'name' => 'Type de salle', 'title' => 'Type de salle'],
-            ['data' => 'type_jour_id', 'name' => 'Type de jour', 'title' => 'Type de jour'],
-            Column::make('horaire_reservation'),
+            Column::make('date_debut'),
+            Column::make('date_fin'),
         ];
     }
 
@@ -89,6 +79,6 @@ class GroupLocalDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'GroupLocal_' . date('YmdHis');
+        return 'JourFerie_' . date('YmdHis');
     }
 }

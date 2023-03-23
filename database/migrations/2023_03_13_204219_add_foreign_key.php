@@ -15,7 +15,6 @@ class AddForeignKey extends Migration
     {
         Schema::table('group_local', function (Blueprint $table) {
             $table->foreign('type_salle_id')->references('id')->on('type_salle');
-            $table->foreign('type_jour_id')->references('id')->on('type_jour');
         });
         Schema::table('gestionnaires_group_locals', function (Blueprint $table) {
             $table->foreign('group_local_id')->references('id')->on('group_local');

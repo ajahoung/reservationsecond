@@ -11,6 +11,7 @@ class TypeAccessoire extends Model
     use HasFactory;
     protected $fillable = [
         'libelle',
+        'quantite'
     ];
     public function lineAccessoire() {
         return $this->belongsTo(LineTypeAccessoire::class, 'type_accessoire_id', 'id');

@@ -73,7 +73,9 @@ class ReservationDataTable extends DataTable
                 if ($query->status == 'PENDING') {
                     return '<div class="btn-group-sm"><a class="btn btn-sm btn-success" href="' . route('activatereservation', ['id' => $query->id, 'status' => 'ACCEPTED']) . '">Valider</a>
                  <a class="btn btn-sm btn-danger" onclick=getId("'.$query->id.'") data-bs-toggle="modal" data-bs-target="#refused-reservation">Refuser</a></div>';
-                } else {
+                }  elseif ($query->status == 'DENIED'){
+                    return '<div class="btn-group-sm"><a class="btn btn-sm btn-primary"  onclick=getComment("'.$query->id.'") data-bs-toggle="modal" data-bs-target="#comment-reservation">Commentaire</a></div>';
+                }else {
                     return '';
                 }
 

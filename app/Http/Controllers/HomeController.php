@@ -12,6 +12,7 @@ use App\Models\CaseAgenda;
 use App\Models\Commentaire;
 use App\Models\Gestionnaire;
 use App\Models\GroupLocal;
+use App\Models\JourFerie;
 use App\Models\LineTypeAccessoire;
 use App\Models\Periode;
 use App\Models\Reservation;
@@ -28,10 +29,10 @@ class HomeController extends Controller
     public function index(Request $request)
     {
         $assets = ['chart', 'animation', 'calender'];
-        if (!is_null($request->get('date'))){
-            $date_start=$request->get('date');
-        }else{
-            $date_start=date("Y-m-d");
+        if (!is_null($request->get('date'))) {
+            $date_start = $request->get('date');
+        } else {
+            $date_start = date("Y-m-d");
         }
         $day = new \DateTime($date_start);
         $month = $day->format('m');
@@ -53,7 +54,7 @@ class HomeController extends Controller
                 $date_array = getdate(mktime(1, 1, 1, $month, $i, $day->format('y')));
                 $date_jour_end = date('Y-m-d', mktime(23, 0, 0, $month, $i, $day->format('y')));
                 $date_jour = date('Y-m-d', mktime(0, 0, 0, $month, $i, $day->format('y')));
-                $reservations = Reservation::query()->where('status','=',Reservation::ACCEPTED)->where('local_id', '=', $salle->id)->where('date_reservation', '>=', $date_jour)
+                $reservations = Reservation::query()->where('status', '=', Reservation::ACCEPTED)->where('local_id', '=', $salle->id)->where('date_reservation', '>=', $date_jour)
                     ->where('date_reservation', '<', $date_jour . ' 23:00:00')->get();
                 $line_reservation[] = [
                     'day' => $date_jour_end,
@@ -69,7 +70,7 @@ class HomeController extends Controller
             ];
         }
 
-        return view('index', ["date_start"=>$date_start,"headers" => $headers, "bodys" => $bodys, "groupes" => $groupes, "salles" => $salles, compact('assets'), 'month' => $number]);
+        return view('index', ["date_start" => $date_start, "headers" => $headers, "bodys" => $bodys, "groupes" => $groupes, "salles" => $salles, compact('assets'), 'month' => $number]);
     }
 
     public function agenda_month(Request $request)
@@ -80,8 +81,9 @@ class HomeController extends Controller
         $salles = TypeSalle::all();
         $day = new \DateTime($request->request->get('date_start'));
         $month = $day->format('m');
-        return view('agenda_month', [ "date_start"=>$request->request->get('date_start'),"groupes" => $groupes, "salle" => $salle,'assets'=>$assets, compact('assets'), 'month' => $month]);
+        return view('agenda_month', ["date_start" => $request->request->get('date_start'), "groupes" => $groupes, "salle" => $salle, 'assets' => $assets, compact('assets'), 'month' => $month]);
     }
+
     public function agenda_week(Request $request)
     {
         $assets = ['chart', 'animation', 'calender'];
@@ -90,8 +92,9 @@ class HomeController extends Controller
         $salles = TypeSalle::all();
         $day = new \DateTime($request->request->get('date_start'));
         $month = $day->format('m');
-        return view('agenda_week', [ "date_start"=>$request->request->get('date_start'),"groupes" => $groupes, "salle" => $salle,'assets'=>$assets, compact('assets'), 'month' => $month]);
+        return view('agenda_week', ["date_start" => $request->request->get('date_start'), "groupes" => $groupes, "salle" => $salle, 'assets' => $assets, compact('assets'), 'month' => $month]);
     }
+
     public function agenda_day(Request $request)
     {
         $assets = ['chart', 'animation', 'calender'];
@@ -100,8 +103,9 @@ class HomeController extends Controller
         $salles = TypeSalle::all();
         $day = new \DateTime($request->request->get('date_start'));
         $month = $day->format('m');
-        return view('agenda_day', [ "date_start"=>$request->request->get('date_start'),"groupes" => $groupes, "salle" => $salle,'assets'=>$assets, compact('assets'), 'month' => $month]);
+        return view('agenda_day', ["date_start" => $request->request->get('date_start'), "groupes" => $groupes, "salle" => $salle, 'assets' => $assets, compact('assets'), 'month' => $month]);
     }
+
     /*
      * Dashboard Pages Routs
      */
@@ -139,7 +143,7 @@ class HomeController extends Controller
             $dateime = new \DateTime($reservation->date_reservation);
 
             $events[] = [
-                'title' => "R_ ".$request->request->get('local') . $reservation->local->libelle,
+                'title' => "R_ " . $request->request->get('local') . $reservation->local->libelle,
                 'start' => $dateime->format('Y-m-d') . ' ' . $reservation->start,
                 'end' => $dateime->format('Y-m-d') . ' ' . $reservation->end,
                 'textColor' => $text_color,
@@ -168,7 +172,45 @@ class HomeController extends Controller
         $typesalles = TypeSalle::all();
         $typejours = TypeJour::all();
         $periodes = Periode::all();
-        return view('my.addreservation_home', ["date" => $request->get('date'), "periodes" => $periodes, "typesalles" => $typesalles, "accessoires" => $accessoires, "typejours" => $typejours]);
+        $date_ = $request->get('date');
+        $conge = JourFerie::query()->where('date_debut', '<=', $date_)
+            ->where('date_fin', '>=', $date_)->first();
+        if (is_null($conge)) {
+            $type_jour=1;
+            $heure_debuts = [
+                '08:25', '09:15', '10:05', '10:55',
+                '11:45', '12:35', '13:25', '14:15', '15:05',
+                '------------ Fin des cours en matinée ------------',
+                '16:30', '17:30', '18:30', '19:30', '20:30', '21:30',
+            ];
+            $heure_fins = [
+                '09:15', '10:05', '10:55',
+                '11:45', '12:35', '13:25', '14:15', '15:05',
+                '------------ Fin des cours en matinée ------------',
+                '17:30', '18:30', '19:30', '20:30', '21:30', '22:30',
+            ];
+        } else {
+            $type_jour=2;
+            $heure_debuts = [
+                '08:25', '09:25', '10:25', '11:25',
+                '12:25', '13:25', '14:25', '15:25', '16:25', '17:25', '18:25',
+                '19:25', '20:25', '21:25', '22:25',
+            ];
+            $heure_fins = [
+                '09:25', '10:25', '11:25',
+                '12:25', '13:25', '14:25', '15:25', '16:25', '17:25', '18:25',
+                '19:25', '20:25', '21:25', '22:25',
+            ];
+        }
+        return view('my.addreservation_home', ["date" => $date_,
+            'conge' => $conge,
+            "periodes" => $periodes,
+            "typesalles" => $typesalles,
+            "accessoires" => $accessoires,
+            "heurefins"=>$heure_fins,
+            "heuredebuts"=>$heure_debuts,
+            "type_jour"=>$type_jour,
+            "typejours" => $typejours]);
     }
 
     public function startreservation(Request $request)
@@ -185,89 +227,108 @@ class HomeController extends Controller
     public function ajaxgetsalle(Request $request)
     {
         $salle = $request->get('typesalle');
-        $jour = $request->get('typejour');
+        $typejour = $request->get('typejour');
         if ($request->get('mode') == "getlocal") {
             $horaire = $request->get('horaire_reservation');
             $group = GroupLocal::query()->firstWhere('type_salle_id', '=', $salle)
-                ->where('type_jour_id', '=', $jour)->getModel();
+                ->where('type_jour_id', '=', $typejour)->getModel();
             $locals = $group->locals;
             return response()->json([
                 'locals' => $locals,
                 'group_id' => $group->id,
             ]);
-        }elseif ($request->get('mode') == "getsalle"){
+        } elseif ($request->get('mode') == "getsalle") {
             $group = GroupLocal::query()->find($request->get('groupe'))->getModel();
             $locals = $group->locals;
             return response()->json([
                 'locals' => $locals,
             ]);
         } else {
-
+            $date_ = $request->get('date');
+            $conge = JourFerie::query()->where('date_debut', '<=', $date_)
+                ->where('date_fin', '>=', $date_)->first();
+            if (is_null($conge)) {
+                $type_jour=1;
+                $heure_debuts = [
+                    '08:25', '09:15', '10:05', '10:55',
+                    '11:45', '12:35', '13:25', '14:15', '15:05',
+                    '------------ Fin des cours en matinée ------------',
+                    '16:30', '17:30', '18:30', '19:30', '20:30', '21:30',
+                ];
+                $heure_fins = [
+                    '09:15', '10:05', '10:55',
+                    '11:45', '12:35', '13:25', '14:15', '15:05',
+                    '------------ Fin des cours en matinée ------------',
+                    '17:30', '18:30', '19:30', '20:30', '21:30', '22:30',
+                ];
+            } else {
+                $type_jour=2;
+                $heure_debuts = [
+                    '08:25', '09:25', '10:25', '11:25',
+                    '12:25', '13:25', '14:25', '15:25', '16:25', '17:25', '18:25',
+                    '19:25', '20:25', '21:25', '22:25',
+                ];
+                $heure_fins = [
+                    '09:25', '10:25', '11:25',
+                    '12:25', '13:25', '14:25', '15:25', '16:25', '17:25', '18:25',
+                    '19:25', '20:25', '21:25', '22:25',
+                ];
+            }
             return response()->json([
-                'begins' => $this->getCrenneaux($request->get('horaire_reservation'),$request->get('typejour')),
-                'ends' => $this->getCrenneauxEnd($request->get('horaire_reservation'),$request->get('typejour')),
+                'begins' => $heure_debuts,
+                'ends' => $heure_fins,
+                'type_jour'=>$type_jour
             ]);
         }
 
     }
 
-    public function getCrenneaux($crenau,$typejour)
+    public function getCrenneaux($crenau, $typejour)
     {
-        if ($typejour==1){
+        if ($typejour == 1) {
             return [
                 '08:25', '09:15', '10:05', '10:55',
-                '11:45', '12:35', '13:25','14:15','15:05',
+                '11:45', '12:35', '13:25', '14:15', '15:05',
                 '------------ Fin des cours en matinée ------------',
                 '16:30', '17:30', '18:30', '19:30', '20:30', '21:30',
             ];
-        }else{
+        } else {
             return [
                 '08:25', '09:25', '10:25', '11:25',
-                '12:25', '13:25', '14:25','15:25','16:25','17:25','18:25',
-                '19:25','20:25','21:25','22:25',
+                '12:25', '13:25', '14:25', '15:25', '16:25', '17:25', '18:25',
+                '19:25', '20:25', '21:25', '22:25',
             ];
         }
 
-       /* if ($crenau == "08h25-15h45") {
-            return [
-                '08:25', '09:15', '10:05', '11:55',
-                '12:45', '13:35', '14:25',
-            ];
-        } else {
-            return [
-                '16:00', '17:00', '18:00', '19:00',
-                '20:00', '21:00',
-            ];
-        }*/
+        /* if ($crenau == "08h25-15h45") {
+             return [
+                 '08:25', '09:15', '10:05', '11:55',
+                 '12:45', '13:35', '14:25',
+             ];
+         } else {
+             return [
+                 '16:00', '17:00', '18:00', '19:00',
+                 '20:00', '21:00',
+             ];
+         }*/
     }
 
-    public function getCrenneauxEnd($crenau,$typejour)
+    public function getCrenneauxEnd($crenau, $typejour)
     {
-        if ($typejour==1){
+        if ($typejour == 1) {
             return [
-                 '09:15', '10:05', '10:55',
-                '11:45', '12:35', '13:25','14:15','15:05',
+                '09:15', '10:05', '10:55',
+                '11:45', '12:35', '13:25', '14:15', '15:05',
                 '------------ Fin des cours en matinée ------------',
-               '17:30', '18:30', '19:30', '20:30', '21:30','22:30',
-            ];
-        }else{
-            return [
-                 '09:25', '10:25', '11:25',
-                '12:25', '13:25', '14:25','15:25','16:25','17:25','18:25',
-                '19:25','20:25','21:25','22:25',
-            ];
-        }
-      /*  if ($crenau == "08h25-15h45") {
-            return [
-                '09:15', '10:05', '11:55',
-                '12:45', '13:35', '14:25', '15:15',
+                '17:30', '18:30', '19:30', '20:30', '21:30', '22:30',
             ];
         } else {
             return [
-                '17:00', '18:00', '19:00',
-                '20:00', '21:00', '22:00',
+                '09:25', '10:25', '11:25',
+                '12:25', '13:25', '14:25', '15:25', '16:25', '17:25', '18:25',
+                '19:25', '20:25', '21:25', '22:25',
             ];
-        }*/
+        }
 
     }
 
@@ -287,6 +348,12 @@ class HomeController extends Controller
         $reservation->end = $data['end'];
         $reservation->libelle = "RESERV " . $data['start'] . "-" . $data['end'];
         $reservation->status = "PENDING";
+        if ($data['jour_type']==1){
+            $reservation->contegent = "Periode contegeant";
+        }else{
+            $reservation->contegent = "Periode non contegeant";
+        }
+
         $reservation->date_reservation = $date_;
         $reservation->save();
         for ($i = 0; $i < sizeof($ob); ++$i) {
@@ -326,9 +393,20 @@ class HomeController extends Controller
     {
         $reservation = Reservation::query()->find($id);
         $gestionnaire = Gestionnaire::query()->firstWhere('user_id', '=', $request->user()->id);
+        $line_accessoires=LineTypeAccessoire::query()->where('reservation_id','=',$id)->get();
+        foreach ($line_accessoires as $line_accessoire){
+            $accessoire=TypeAccessoire::query()->find($line_accessoire->type_accessoire_id);
+            if ($accessoire->quantite<$line_accessoire->nombre){
+                return redirect()->route('listreservation')->withErrors("Quantité ".$accessoire->libelle." insuffissant pour cette reservation."." Disponible ".$accessoire->quantite);
+            }else{
+                $accessoire->update([
+                    'quantite'=>$accessoire->quantite-$line_accessoire->nombre
+                ]);
+            }
+        }
         $reservation->update([
             'status' => Reservation::ACCEPTED,
-            'gestionnaire_id' => $gestionnaire->id
+            'gestionnaire_id' => is_null($gestionnaire)?null:$gestionnaire->id
         ]);
         $int = DurationHelper::getCreanneauBetwennTimes($reservation->start, $reservation->end);
         for ($i = 1; $i < $int; $i++) {
@@ -355,15 +433,15 @@ class HomeController extends Controller
     {
         $reservation = Reservation::query()->find($request->get('reservation_id'));
 
-        $user = Gestionnaire::query()->firstWhere('user_id', '=', $request->user()->id);
+        $gestionnaire = Gestionnaire::query()->firstWhere('user_id', '=', $request->user()->id);
         $commentaire = Commentaire::create([
             'message' => $request->get('message'),
             'reservation_id' => $reservation->id,
-            'gestionnaire_id' => $user->id
+            'gestionnaire_id' => is_null($gestionnaire)?null:$gestionnaire->id
         ]);
         $reservation->update([
             'status' => Reservation::DENIED,
-            'gestionnaire_id' => $user->id
+            'gestionnaire_id' => is_null($gestionnaire)?null:$gestionnaire->id
         ]);
         return redirect()->route('listreservation')->withSuccess('Update successful!');
     }
@@ -379,7 +457,15 @@ class HomeController extends Controller
 
         return redirect()->route('myreservation')->withSuccess('Delete successful!');
     }
-
+    public function commentairereservation(Request $request)
+    {
+        $data = json_decode($request->getContent(), true);
+        $reservation = Reservation::query()->find($request['reservation']);
+        $comment=Commentaire::query()->where('reservation_id','=',$request['reservation'])->first();
+        return response()->json(
+            $comment
+        );
+    }
     public function listreservation(ReservationDataTable $dataTable)
     {
         $pageTitle = "Liste des reservations";

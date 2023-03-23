@@ -93,6 +93,43 @@
                 }
             })
         })
+        $('#contegeant').hide();
+        $('#hors_contegeant').hide();
+        $('#r_date').change(function () {
+            $.ajax({
+                url: configs.routes.reservation_getsalle,
+                data: {
+                    date: $(this).val(),
+                    mode: 'gethoraire'
+                },
+                type: "GET",
+                success: function (data) {
+                    $('#jour_type').val(data.type_jour)
+                    if (data.type_jour===1){
+                        $('#contegeant').show();
+                        $('#hors_contegeant').hide();
+
+
+                    }else {
+                        $('#contegeant').hide();
+                        $('#hors_contegeant').show();
+                    }
+                    $('#r_time').html("")
+                    $('#r_time_end').html("")
+                    $.each(data.begins, function (index, item) {
+                        $('#r_time').append("<option>"+item+"</option>")
+
+                    })
+                    $.each(data.ends, function (index, item) {
+                        $('#r_time_end').append("<option>"+item+"</option>")
+
+                    })
+                },
+                error: function (error) {
+
+                }
+            })
+        })
         $('#add_line').click(function () {
 
             var qte = $('#qte').val();
@@ -128,7 +165,8 @@
                     ob: jsonObj, local: $('#locaux  option:selected').val()
                     , periode: $('#periode option:selected').val(),end: $('#r_time_end').val(),
                     date_reservation: $('#r_date').val(),start: $('#r_time').val(),
-                    group_local: $('#group_local').val()
+                    group_local: $('#group_local').val(),
+                    jour_type: $('#jour_type').val()
                 }),
                 success: function (data) {
                     console.log(data)
@@ -154,6 +192,7 @@
 @endpush
 
 <x-app-layout :assets="$assets ?? []">
+    <input id="jour_type" type="hidden">
     <div>
         <div class="row">
             <div class="col-sm-12">
@@ -164,13 +203,14 @@
                         </div>
                     </div>
                     <div class="card-body px-3">
-
+                        <h4 class="badge badge-lg btn-success" id="contegeant">Reservation pendant periode contengeant </h4>
+                        <h4 class="badge badge-lg btn-danger" id="hors_contegeant">Reservation pendant periode hors contengeant </h4>
                         <div class="row" id="step-1">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label class="form-label" for="r_time">Date de reservation: </label>
                                 <input type="date" class="form-control" id="r_date">
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label class="form-label">Periode: <span class="text-danger">*</span></label>
                                 <select class="form-select" id="periode">
                                     @foreach($periodes as $periode)
@@ -180,7 +220,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="form-group col-md-6 mt-2">
+                            <div class="form-group col-md-4 mt-2">
                                 <label class="form-label">Type de salle: <span class="text-danger">*</span></label>
                                 <select class="form-select" id="typesalle">
                                     <option>selectionnez type salle</option>
@@ -189,19 +229,16 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="form-group col-md-6 mt-2">
+                     {{--       <div class="form-group col-md-6 mt-2">
                                 <label class="form-label">Type de jours: <span class="text-danger">*</span></label>
                                 <select class="form-select" id="typejour">
                                     <option>selectionnez type jour</option>
-                                    {{--@foreach($typejours as $jour)
-                                        <option value="{{$jour->id}}">{{ $jour->type }}</option>
-                                    @endforeach--}}
                                     <option value="1">Jours scolaires</option>
                                     <option value="2">Jours feriés</option>
                                     <option value="3">Weekends</option>
                                     <option value="4">Congés</option>
                                 </select>
-                            </div>
+                            </div>--}}
                           {{--  <h5>Horaire de reservation</h5>
                             <div class="col-md-12 mt-2 mb-3">
                                 <div class="form-check col-md-4"><input class="form-check-input"  value="08h25-15h45" type="radio" name="flexRadioDefault" id="flexRadioDefault1">

@@ -32,7 +32,7 @@ class ReservationUserDataTable extends DataTable
                     case 'ACCEPTED':
                         $status = 'primary';
                         break;
-                    case 'REFUSED':
+                    case 'DENIED':
                         $status = 'danger';
                         break;
                     case 'PENDING':
@@ -73,6 +73,8 @@ class ReservationUserDataTable extends DataTable
             ->addColumn('action', function ($query) {
                 if ($query->status == 'PENDING') {
                     return '<div class="btn-group-sm"><a class="btn btn-sm btn-danger" href="' . route('deletereservation', ['id' => $query->id]) . '">Supprimer</a></div>';
+                } elseif ($query->status == 'DENIED'){
+                    return '<div class="btn-group-sm"><a class="btn btn-sm btn-primary"  onclick=getComment("'.$query->id.'") data-bs-toggle="modal" data-bs-target="#comment-reservation">Commentaire</a></div>';
                 } else {
                     return '';
                 }
