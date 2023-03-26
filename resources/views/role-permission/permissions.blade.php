@@ -1,3 +1,46 @@
+@push('scripts')
+    <script>
+        $("#table_permission>tbody input[type=checkbox]").click(function () {
+           // alert($(this).val())
+        })
+        $("#save_permission").click(function () {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            })
+            jsonObj = [];
+            $("#table_permission>tbody input[type=checkbox]:checked").each(function () {
+                var row = $(this).closest('tr')[0];
+                var permission = $(this).attr('data-permission');
+                var role = $(this).val();
+                item = {};
+                item['permission'] = permission;
+                item['role'] = role;
+                jsonObj.push(item)
+            })
+           // console.log(JSON.stringify({data: jsonObj}))
+            $.ajax({
+                url: configs.routes.permissionstore,
+                type: "POST",
+                dataType: "JSON",
+                data: JSON.stringify({
+                    ob: jsonObj
+                }),
+                success: function (data) {
+                    console.log(data)
+                    window.location=configs.routes.permissionindex
+                },
+                error: function (err) {
+                    alert("An error ocurred while loading data ...");
+                    setTimeout(function () {
+                        $("#overlay").fadeOut(300);
+                    }, 500);
+                }
+            });
+        })
+    </script>
+@endpush
 <x-app-layout :assets="$assets ?? []">
 <div>
    <div class="row">
@@ -28,14 +71,14 @@
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    {{ Form::open(['url' => '#','method' => 'get']) }}
-                        <table class="table table-bordered">
+                   {{-- {{ Form::open(['url' => 'permission','method' => 'get']) }}--}}
+                        <table class="table table-bordered" id="table_permission">
                             <thead>
                                 <tr>
                                     <th></th>
                                     @foreach ($roles as $role)
                                         <th class="text-center">{{ $role->title }}
-                                        <div style="float:right;">
+                                      {{--  <div style="float:right;">
                                         <a class="btn btn-sm btn-icon text-primary flex-end" data-bs-toggle="tooltip" title="Edit User" href="#">
                                             <span class="btn-inner">
                                                 <svg width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" >
@@ -54,7 +97,7 @@
                                                 </svg>
                                             </span>
                                         </a>
-                                        </div>
+                                        </div>--}}
                                         </th>
                                     @endforeach
                                 </tr>
@@ -86,8 +129,9 @@
                                     </td>
                                     @foreach ($roles as $role)
                                         <td class="text-center">
-                                            <input class="form-check-input" type="checkbox" id="role-{{$role->id}}-permission-{{$permission->id}}" name="permission[{{$permission->name}}][]" value='{{$role->name}}'
+                                            <input class="form-check-input" type="checkbox" data-role="{{$role->id}}" data-permission="{{$permission->name}}" id="role-{{$role->id}}-permission-{{$permission->id}}" name="permission[{{$permission->name}}][]" value='{{$role->id}}'
                                             {{ (AuthHelper::checkRolePermission($role,$permission->name)) ? 'checked' : '' }}>
+                                            <span class='hidden' hidden>{{$permission->name}}</span>
                                         </td>
                                     @endforeach
                                 </tr>
@@ -95,9 +139,10 @@
                             </tbody>
                         </table>
                         <div class="text-center">
-                        {{ Form::submit( __('global-message.save'), ['class'=>'btn btn-md btn-primary']) }}
+                            <button class="btn btn-md btn-primary" id="save_permission">Save</button>
+                        {{--{{ Form::button( __('global-message.save'), ['class'=>'btn btn-md btn-primary','id'=>'save_permission']) }}--}}
                         </div>
-                    {{ Form::close() }}
+                    {{--{{ Form::close() }}--}}
                 </div>
             </div>
          </div>
@@ -105,3 +150,4 @@
    </div>
 </div>
 </x-app-layout>
+

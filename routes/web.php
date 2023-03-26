@@ -6,6 +6,7 @@ use App\Http\Controllers\ConfigController;
 use App\Http\Controllers\GestionnaireController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PersonnelController;
+use App\Http\Controllers\RapportController;
 use App\Http\Controllers\Security\PermissionController;
 use App\Http\Controllers\Security\RoleController;
 use App\Http\Controllers\Security\RolePermission;
@@ -47,10 +48,28 @@ Route::group(['prefix' => 'icons'], function() {
     Route::get('dualtone', [HomeController::class, 'dualtone'])->name('icons.dualtone');
     Route::get('colored', [HomeController::class, 'colored'])->name('icons.colored');
 });
+Route::group(['middleware' => 'permission:role'], function () {
+    // Users Module
+    Route::resource('users', UserController::class);
+});
+Route::group(['middleware' => 'role:super_admin|admin'], function () {
+    Route::get('/rapport_occupation', [RapportController::class, 'index'])->name('rapport.index');
+
+    Route::get('/indexgrouplocal', [ConfigController::class, 'indexgrouplocal'])->name('config.indexgrouplocal');
+    Route::get('/indexlocal', [ConfigController::class, 'indexlocal'])->name('config.indexlocal');
+    Route::get('/indextypesalle', [ConfigController::class, 'indextypesalle'])->name('config.indextypesalle');
+    Route::get('/indextypejour', [ConfigController::class, 'indextypejour'])->name('config.indextypejour');
+    Route::get('/indexperiode', [ConfigController::class, 'indexperiode'])->name('config.indexperiode');
+    Route::get('/indexjourferie', [ConfigController::class, 'indexjourferie'])->name('config.indexjourferie');
+    Route::get('/indextypeaccessoire', [ConfigController::class, 'indextypeaccessoire'])->name('config.indextypeaccessoire');
+
+});
 Route::group(['middleware' => 'auth'], function () {
     // Permission Module
+    Route::post('/role-permission-store', [RolePermission::class, 'store'])->name('role.permission.store');
     Route::get('/role-permission', [RolePermission::class, 'index'])->name('role.permission.list');
     Route::resource('permission', PermissionController::class);
+    Route::post('/storepermission', [RolePermission::class, 'storepermission'])->name('storepermission');
     Route::resource('role', RoleController::class);
     // Dashboard Routes
     Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
@@ -61,23 +80,33 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('reservation/{id}/activate', [HomeController::class, 'activatereservation'])->name('activatereservation');
     Route::get('reservation/{id}/delete', [HomeController::class, 'deletereservation'])->name('deletereservation');
     Route::get('reservation/comment', [HomeController::class, 'commentairereservation'])->name('commentairereservation');
-    // Users Module
-    Route::resource('users', UserController::class);
+
 
     Route::resource('gestionnaires', GestionnaireController::class);
     Route::post('gestionnaires/store', [GestionnaireController::class, 'store'])->name('gestionnaires.store');
+
+    Route::get('local/{id}/delete', [ConfigController::class, 'localdelete'])->name('localdelete');
+    Route::match(array('GET','POST'),'local/{id}/edit', [ConfigController::class, 'localedit'])->name('localedit');
+
+    Route::get('periode/{id}/delete', [ConfigController::class, 'periodedelete'])->name('periodedelete');
+    Route::match(array('GET','POST'),'periode/{id}/edit', [ConfigController::class, 'periodeedit'])->name('periodeedit');
+
+    Route::get('typeaccessoire/{id}/delete', [ConfigController::class, 'typeaccessoiredelete'])->name('typeaccessoiredelete');
+    Route::match(array('GET','POST'),'typeaccessoire/{id}/edit', [ConfigController::class, 'typeaccessoireedit'])->name('typeaccessoireedit');
+
+    Route::get('congeferie/{id}/delete', [ConfigController::class, 'congeferiedelete'])->name('congeferiedelete');
+    Route::match(array('GET','POST'),'congeferie/{id}/edit', [ConfigController::class, 'congeferieedit'])->name('congeferieedit');
+
+    Route::get('typesalle/{id}/delete', [ConfigController::class, 'typesalledelete'])->name('typesalledelete');
+    Route::match(array('GET','POST'),'typesalle/{id}/edit', [ConfigController::class, 'typesalleedit'])->name('typesalleedit');
+
+    Route::get('groupelocal/{id}/delete', [ConfigController::class, 'groupelocaldelete'])->name('groupelocaldelete');
+    Route::match(array('GET','POST'),'groupelocal/{id}/gestionnaire', [ConfigController::class, 'groupelocalgestionnaire'])->name('groupelocalgestionnaire');
 
     Route::resource('personnels', PersonnelController::class);
     Route::post('personnels/store', [PersonnelController::class, 'store'])->name('personnels.store');
     Route::resource('config', ConfigController::class);
 
-    Route::get('/indexgrouplocal', [ConfigController::class, 'indexgrouplocal'])->name('config.indexgrouplocal');
-    Route::get('/indexlocal', [ConfigController::class, 'indexlocal'])->name('config.indexlocal');
-    Route::get('/indextypesalle', [ConfigController::class, 'indextypesalle'])->name('config.indextypesalle');
-    Route::get('/indextypejour', [ConfigController::class, 'indextypejour'])->name('config.indextypejour');
-    Route::get('/indexperiode', [ConfigController::class, 'indexperiode'])->name('config.indexperiode');
-    Route::get('/indexjourferie', [ConfigController::class, 'indexjourferie'])->name('config.indexjourferie');
-    Route::get('/indextypeaccessoire', [ConfigController::class, 'indextypeaccessoire'])->name('config.indextypeaccessoire');
 
     Route::get('/createlocal', [ConfigController::class, 'createlocal'])->name('config.createlocal');
     Route::get('/creategrouplocal', [ConfigController::class, 'creategrouplocal'])->name('config.creategrouplocal');

@@ -30,17 +30,21 @@ class PermissionController extends Controller
         return response()->json(['data' =>  $view, 'status'=> true]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
+    public function storepermission(Request $request)
+    {
+        //var_dump($request);
+
+       // return redirect()->route('role.permission.list');
+        return response()->json(["test"]);
+    }
     public function store(Request $request)
     {
-        //code here
-    }
+        //var_dump($request);
 
+         return redirect()->route('role.permission.list');
+
+    }
     /**
      * Display the specified resource.
      *

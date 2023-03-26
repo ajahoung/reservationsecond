@@ -76,6 +76,34 @@
     </li>
     @endif
     @if(auth()->user()->hasRole('admin')||auth()->user()->hasRole('super_admin'))
+        <li><hr class="hr-horizontal"></li>
+        <li class="nav-item static-item">
+            <a class="nav-link static-item disabled" href="#" tabindex="-1">
+                <span class="default-icon">Rapports</span>
+                <span class="mini-icon">-</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {{activeRoute(route('rapport.index'))}}" aria-current="page" href="{{route('rapport.index')}}">
+                <i class="icon">
+                    <svg width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M21.9964 8.37513H17.7618C15.7911 8.37859 14.1947 9.93514 14.1911 11.8566C14.1884 13.7823 15.7867 15.3458 17.7618 15.3484H22V15.6543C22 19.0136 19.9636 21 16.5173 21H7.48356C4.03644 21 2 19.0136 2 15.6543V8.33786C2 4.97862 4.03644 3 7.48356 3H16.5138C19.96 3 21.9964 4.97862 21.9964 8.33786V8.37513ZM6.73956 8.36733H12.3796H12.3831H12.3902C12.8124 8.36559 13.1538 8.03019 13.152 7.61765C13.1502 7.20598 12.8053 6.87318 12.3831 6.87491H6.73956C6.32 6.87664 5.97956 7.20858 5.97778 7.61852C5.976 8.03019 6.31733 8.36559 6.73956 8.36733Z" fill="currentColor"></path>
+                        <path opacity="0.4" d="M16.0374 12.2966C16.2465 13.2478 17.0805 13.917 18.0326 13.8996H21.2825C21.6787 13.8996 22 13.5715 22 13.166V10.6344C21.9991 10.2297 21.6787 9.90077 21.2825 9.8999H17.9561C16.8731 9.90338 15.9983 10.8024 16 11.9102C16 12.0398 16.0128 12.1695 16.0374 12.2966Z" fill="currentColor"></path>
+                        <circle cx="18" cy="11.8999" r="1" fill="currentColor"></circle>
+                    </svg>
+                </i>
+                <span>Rapport d'occupation<span class="badge rounded-pill bg-success"></span></span>
+            </a>
+        </li>{{--
+        <li class="nav-item">
+            <a class="nav-link {{activeRoute(route('listreservation'))}}" aria-current="page" href="{{route('listreservation')}}">
+                <i class="icon">
+                    <svg width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">                            <path fill-rule="evenodd" clip-rule="evenodd" d="M7.81 2H16.191C19.28 2 21 3.78 21 6.83V17.16C21 20.26 19.28 22 16.191 22H7.81C4.77 22 3 20.26 3 17.16V6.83C3 3.78 4.77 2 7.81 2ZM8.08 6.66V6.65H11.069C11.5 6.65 11.85 7 11.85 7.429C11.85 7.87 11.5 8.22 11.069 8.22H8.08C7.649 8.22 7.3 7.87 7.3 7.44C7.3 7.01 7.649 6.66 8.08 6.66ZM8.08 12.74H15.92C16.35 12.74 16.7 12.39 16.7 11.96C16.7 11.53 16.35 11.179 15.92 11.179H8.08C7.649 11.179 7.3 11.53 7.3 11.96C7.3 12.39 7.649 12.74 8.08 12.74ZM8.08 17.31H15.92C16.319 17.27 16.62 16.929 16.62 16.53C16.62 16.12 16.319 15.78 15.92 15.74H8.08C7.78 15.71 7.49 15.85 7.33 16.11C7.17 16.36 7.17 16.69 7.33 16.95C7.49 17.2 7.78 17.35 8.08 17.31Z" fill="currentColor"></path>
+                    </svg>
+                </i>
+                <span>Rapport periodique<span class="badge rounded-pill bg-success"></span></span>
+            </a>
+        </li>--}}
     <li><hr class="hr-horizontal"></li>
     <li class="nav-item static-item">
         <a class="nav-link static-item disabled" href="#" tabindex="-1">
@@ -205,18 +233,14 @@
             </a>
         </li>
     <li class="nav-item">
-        <a class="nav-link" data-bs-toggle="collapse" href="#sidebar-roles" role="button"  aria-expanded="false" aria-controls="sidebar-special-pages">
+        <a class="nav-link {{activeRoute(route('role.permission.list'))}}" href="{{route('role.permission.list')}}">
             <i class="icon">
                 <svg width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">                            <path fill-rule="evenodd" clip-rule="evenodd" d="M17.5227 7.39601V8.92935C19.2451 9.46696 20.5 11.0261 20.5 12.8884V17.8253C20.5 20.1308 18.5886 22 16.2322 22H7.7688C5.41136 22 3.5 20.1308 3.5 17.8253V12.8884C3.5 11.0261 4.75595 9.46696 6.47729 8.92935V7.39601C6.48745 4.41479 8.95667 2 11.9848 2C15.0535 2 17.5227 4.41479 17.5227 7.39601ZM12.0051 3.73904C14.0678 3.73904 15.7445 5.37871 15.7445 7.39601V8.7137H8.25553V7.37613C8.26569 5.36878 9.94232 3.73904 12.0051 3.73904ZM12.8891 16.4549C12.8891 16.9419 12.4928 17.3294 11.9949 17.3294C11.5072 17.3294 11.1109 16.9419 11.1109 16.4549V14.2488C11.1109 13.7718 11.5072 13.3843 11.9949 13.3843C12.4928 13.3843 12.8891 13.7718 12.8891 14.2488V16.4549Z" fill="currentColor"></path>
                 </svg>
             </i>
-            <span class="item-name">Roles</span>
-            <i class="right-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                </svg>
-            </i>
-        </a>
+            <i class="sidenav-mini-icon"> P </i>
+            <span class="item-name">Permission</span>
+        </a>{{--
         <ul class="sub-nav collapse" id="sidebar-roles" data-bs-parent="#sidebar">
             <li class=" nav-item">
                 <a class="nav-link {{activeRoute(route('role.index'))}}" href="{{route('role.index')}}">
@@ -244,7 +268,7 @@
                     <span class="item-name">Permission</span>
                 </a>
             </li>
-        </ul>
+        </ul>--}}
     </li>
     @endif
     <li class="nav-item">

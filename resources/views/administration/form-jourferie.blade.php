@@ -14,7 +14,6 @@
             {{ Form::Date('datefin', old('datefin'), ['class' => 'form-control','id' => 'datefin', 'placeholder' => '', 'required']) }}
         </div>
         <div class="form-group col-md-12">
-
             {{ Form::checkbox('Active', old('Active'), ['class' => 'form-control','id' => 'Active', 'placeholder' => '', 'required']) }}
             <label class="form-label">Active</label></div>
     </div>

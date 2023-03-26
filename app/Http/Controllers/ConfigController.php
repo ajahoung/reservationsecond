@@ -10,6 +10,7 @@ use App\DataTables\PeriodeDataTable;
 use App\DataTables\TypeJourDataTable;
 use App\DataTables\TypeSalleDataTable;
 use App\Helpers\AuthHelper;
+use App\Models\Gestionnaire;
 use App\Models\GroupLocal;
 use App\Models\JourFerie;
 use App\Models\Local;
@@ -207,7 +208,202 @@ class ConfigController extends Controller
         $view = view('administration.form-grouplocal',compact('salles','jours'))->render();
         return response()->json(['data' => $view, 'status' => true]);
     }
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function groupelocalgestionnaire($id,Request $request)
+    {
+        $groupe = GroupLocal::query()->find($id);
+        $gestionnaires=Gestionnaire::query()->leftJoin('users','users.id','=','gestionnaire.id')->pluck('users.first_name','gestionnaire.id');
 
+        if ($request->method()=="POST"){
+            $groupe->gestionnaires()->sync($request->gestionnaire);
+            $b_ool = $groupe->save();
+            if ($b_ool) {
+                return redirect()->route('groupelocalgestionnaire',['id'=>$id])->withSuccess(__('Save success', ['name' => __('users.store')]));
+            } else {
+                return redirect()->route('groupelocalgestionnaire',['id'=>$id])->withErrors(__('update', ['name' => __('users.store')]));
+            }
+        }
+
+        return view('administration.groupelocalgestionnaire', [
+            'groupe'=>$groupe,
+            'gestionnaires'=>$gestionnaires,
+            'groupe_gestionnaires'=>$groupe->gestionnaires
+        ]);
+    }
+    /**
+     * Delete ressource.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function groupelocaldelete($id,Request $request)
+    {
+        $groupe = GroupLocal::query()->find($id);
+        $b_ool =$groupe->delete();
+        if ($b_ool) {
+            return redirect()->route('config.indexgrouplocal')->withSuccess(__('Save success', ['name' => __('users.store')]));
+        } else {
+            return redirect()->route('config.indexgrouplocal')->withErrors(__('update', ['name' => __('users.store')]));
+        }
+    }
+    /**
+     * Delete ressource.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function typesalledelete($id,Request $request)
+    {
+        $groupe = TypeSalle::query()->find($id);
+        $b_ool =$groupe->delete();
+        if ($b_ool) {
+            return redirect()->route('config.indextypesalle')->withSuccess(__('Save success', ['name' => __('users.store')]));
+        } else {
+            return redirect()->route('config.indextypesalle')->withErrors(__('Delete', ['name' => __('users.store')]));
+        }
+    }
+    /**
+     * Delete ressource.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function typeaccessoiredelete($id,Request $request)
+    {
+        $groupe = TypeSalle::query()->find($id);
+        $b_ool =false;
+        if ($b_ool) {
+            return redirect()->route('config.indextypeaccessoire')->withSuccess(__('Save success', ['name' => __('users.store')]));
+        } else {
+            return redirect()->route('config.indextypeaccessoire')->withErrors(__('Delete', ['name' => __('users.store')]));
+        }
+    }
+    /**
+     * Delete ressource.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function congeferiedelete($id,Request $request)
+    {
+        $groupe = TypeSalle::query()->find($id);
+        $b_ool =$groupe->delete();
+        if ($b_ool) {
+            return redirect()->route('config.indexjourferie')->withSuccess(__('Save success', ['name' => __('users.store')]));
+        } else {
+            return redirect()->route('config.indexjourferie')->withErrors(__('Delete', ['name' => __('users.store')]));
+        }
+    }
+    public function localdelete($id,Request $request)
+    {
+        $groupe = TypeSalle::query()->find($id);
+        $b_ool =$groupe->delete();
+        if ($b_ool) {
+            return redirect()->route('config.indexlocal')->withSuccess(__('Save success', ['name' => __('users.store')]));
+        } else {
+            return redirect()->route('config.indexlocal')->withErrors(__('Delete', ['name' => __('users.store')]));
+        }
+    }
+    public function localedit($id,Request $request){
+        $local=Local::query()->find($id);
+        if ($request->method()=="POST"){
+
+            $local->libelle = $request->libelle;
+            $local->save();
+            $local->group_locals()->sync($request->group_locals);
+
+            $b_ool = $local->update();
+            if ($b_ool) {
+                return redirect()->route('config.indexlocal')->withSuccess(__('Save success', ['name' => __('users.store')]));
+            } else {
+                return redirect()->route('config.indexlocal')->withErrors(__('message.msg_added', ['name' => __('users.store')]));
+            }
+        }
+        $values=GroupLocal::all()->pluck('libelle','id');
+        $exitgroup=$local->group_locals;
+        return view('administration.edit_local', [
+            'values'=>$values,
+            'local'=>$local,
+            'exit_group'=>$exitgroup
+        ]);
+    }
+    public function periodeedit($id,Request $request){
+        $periode=Periode::query()->find($id);
+        if ($request->method()=="POST"){
+            $periode->libelle = $request->libelle;
+            $periode->save();
+
+            $b_ool = $periode->update();
+            if ($b_ool) {
+                return redirect()->route('config.indexperiode')->withSuccess(__('Save success', ['name' => __('users.store')]));
+            } else {
+                return redirect()->route('config.indexperiode')->withErrors(__('message.msg_added', ['name' => __('users.store')]));
+            }
+        }
+        return view('administration.edit_periode', [
+            'periode'=>$periode,
+        ]);
+    }
+    public function typeaccessoireedit($id,Request $request){
+        $local=TypeAccessoire::query()->find($id);
+        if ($request->method()=="POST"){
+
+            $b_ool = $local->update([
+                'libelle'=>$request->libelle,
+                'quantite'=>$request->quantite
+            ]);
+            if ($b_ool) {
+                return redirect()->route('config.indextypeaccessoire')->withSuccess(__('Save success', ['name' => __('users.store')]));
+            } else {
+                return redirect()->route('config.indextypeaccessoire')->withErrors(__('message.msg_added', ['name' => __('users.store')]));
+            }
+        }
+        return view('administration.edit_typeaccessoire', [
+            'local'=>$local,
+        ]);
+    }
+    public function congeferieedit($id,Request $request){
+        $local=JourFerie::query()->find($id);
+        if ($request->method()=="POST"){
+
+            $b_ool = $local->update([
+                'libelle'=>$request->libelle,
+                'date_debut'=>$request->datedebut,
+                'date_fin'=>$request->datefin,
+                'active'=>$request->active,
+            ]);
+            if ($b_ool) {
+                return redirect()->route('config.indexjourferie')->withSuccess(__('Save success', ['name' => __('users.store')]));
+            } else {
+                return redirect()->route('config.indexjourferie')->withErrors(__('message.msg_added', ['name' => __('users.store')]));
+            }
+        }
+        return view('administration.edit_congeferie', [
+            'local'=>$local,
+        ]);
+    }
+    public function typesalleedit($id,Request $request){
+
+        if ($request->method()=="POST"){
+            $typesalle=TypeSalle::query()->find($id);
+            $b_ool = $typesalle->update([
+                'type'=>$request->type
+            ]);
+            if ($b_ool) {
+                return redirect()->route('config.indextypesalle')->withSuccess(__('Save success', ['name' => __('users.store')]));
+            } else {
+                return redirect()->route('config.indextypesalle')->withErrors(__('message.msg_added', ['name' => __('users.store')]));
+            }
+        }$typesalle=TypeSalle::query()->find($id);
+        return view('administration.edit_typesalle', [
+            'typesalle'=>$typesalle,
+        ]);
+    }
     /**
      * Store a newly created resource in storage.
      *
@@ -225,7 +421,7 @@ class ConfigController extends Controller
         if ($b_ool) {
             return redirect()->route('config.indexgrouplocal')->withSuccess(__('Save success', ['name' => __('users.store')]));
         } else {
-            return redirect()->route('indexgrouplocal.indexgrouplocal')->withErrors(__('update', ['name' => __('users.store')]));
+            return redirect()->route('config.indexgrouplocal')->withErrors(__('Delete', ['name' => __('users.store')]));
         }
 
     }

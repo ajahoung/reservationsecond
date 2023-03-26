@@ -60,6 +60,8 @@
             ajaxpostreservation: "{{\Illuminate\Support\Facades\URL::route('ajaxpostreservation')}}",
             calendarevent: "{{\Illuminate\Support\Facades\URL::to('calendarevent')}}",
             commentairereservation: "{{\Illuminate\Support\Facades\URL::to('reservation/comment')}}",
+            permissionstore: "{{\Illuminate\Support\Facades\URL::to('storepermission')}}",
+            permissionindex: "{{\Illuminate\Support\Facades\URL::to('role-permission')}}",
         }
     }
 </script>

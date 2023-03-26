@@ -29,8 +29,8 @@ class HomeController extends Controller
     public function index(Request $request)
     {
         $assets = ['chart', 'animation', 'calender'];
-        if (!is_null($request->get('date'))) {
-            $date_start = $request->get('date');
+        if (!is_null($request->get('date_start'))) {
+            $date_start = $request->get('date_start');
         } else {
             $date_start = date("Y-m-d");
         }
@@ -38,7 +38,11 @@ class HomeController extends Controller
         $month = $day->format('m');
         $number = cal_days_in_month(CAL_GREGORIAN, $month, $day->format('y'));
         $headers = [];
+        $header_weeks = [];
+        $header_days = [];
         $bodys = [];
+        $body_weeks = [];
+        $body_days = [];
         for ($i = 1; $i <= $number; $i++) {
             $id_var = getdate(mktime(1, 1, 1, $month, $i, $day->format('y')));
             $headers[] = [
@@ -46,10 +50,21 @@ class HomeController extends Controller
                 'number' => $i,
             ];
         }
+        for ($j = 0; $j <= 6; $j++) {
+            $day_i = DateTimeHelper::daysOfWeekXML($date_start)[$j];
+            $daym_ = new \DateTime($day_i);
+            $id_var = getdate(mktime(1, 1, 1, $month, $daym_->format('d'), $day->format('y')));
+            $header_weeks[] = [
+                'day' => DateTimeHelper::getDayByNumber($id_var['wday']),
+                'number' => $day_i,
+            ];
+        }
         $groupes = GroupLocal::all();
         $salles = TypeSalle::all();
         foreach ($salles as $salle) {
             $line_reservation = [];
+            $line_reservation_week = [];
+            $line_reservation_day = [];
             for ($i = 1; $i <= $number; $i++) {
                 $date_array = getdate(mktime(1, 1, 1, $month, $i, $day->format('y')));
                 $date_jour_end = date('Y-m-d', mktime(23, 0, 0, $month, $i, $day->format('y')));
@@ -62,15 +77,58 @@ class HomeController extends Controller
                     'agenda' => $reservations,
                 ];
             }
-            $bodys[] = [
+            for ($j = 0; $j <= 6; $j++) {
+                $day_i = DateTimeHelper::daysOfWeekXML($date_start)[$j];
+                $reservations = Reservation::query()->where('status', '=', Reservation::ACCEPTED)
+                    ->where('local_id', '=', $salle->id)
+                    ->where('date_reservation', '>=', $day_i)
+                    ->where('date_reservation', '<', $day_i . ' 23:00:00')->get();
+                $line_reservation_week[] = [
+                    'day' => $date_jour_end,
+                    'date_jour' => $day_i,
+                    'agenda' => $reservations,
+                ];
+            }
 
+            for ($k = 0; $k < 1; $k++) {
+                $day_i = $date_start;
+                $reservations_ = Reservation::query()->where('status', '=', Reservation::ACCEPTED)
+                    ->where('local_id', '=', $salle->id)
+                    ->where('date_reservation', '>=', $day_i)
+                    ->where('date_reservation', '<', $day_i . ' 23:00:00')->get();
+                $line_reservation_day[] = [
+                    'day' => $date_jour_end,
+                    'date_jour' => $day_i,
+                    'agenda' => $reservations_,
+                ];
+            }
+            $bodys[] = [
                 'line' => $salle->type,
                 'line_id' => $salle->id,
                 'occupations' => $line_reservation
             ];
+            $body_weeks[] = [
+                'line' => $salle->type,
+                'line_id' => $salle->id,
+                'occupations' => $line_reservation_week
+            ];
+            $body_days[] = [
+                'line' => $salle->type,
+                'line_id' => $salle->id,
+                'occupations' => $line_reservation_day
+            ];
         }
-
-        return view('index', ["date_start" => $date_start, "headers" => $headers, "bodys" => $bodys, "groupes" => $groupes, "salles" => $salles, compact('assets'), 'month' => $number]);
+        return view('index', ["date_start" => $date_start,
+            "headers" => $headers,
+            "bodys" => $bodys,
+            "groupes" => $groupes,
+            "salles" => $salles,
+            "header_weeks" => $header_weeks,
+            "body_weeks" => $body_weeks,
+            "body_days" => $body_days,
+            compact('assets'),
+            'week' => $day->format('W'),
+            'month' => $number]);
     }
 
     public function agenda_month(Request $request)
@@ -176,7 +234,7 @@ class HomeController extends Controller
         $conge = JourFerie::query()->where('date_debut', '<=', $date_)
             ->where('date_fin', '>=', $date_)->first();
         if (is_null($conge)) {
-            $type_jour=1;
+            $type_jour = 1;
             $heure_debuts = [
                 '08:25', '09:15', '10:05', '10:55',
                 '11:45', '12:35', '13:25', '14:15', '15:05',
@@ -190,7 +248,7 @@ class HomeController extends Controller
                 '17:30', '18:30', '19:30', '20:30', '21:30', '22:30',
             ];
         } else {
-            $type_jour=2;
+            $type_jour = 2;
             $heure_debuts = [
                 '08:25', '09:25', '10:25', '11:25',
                 '12:25', '13:25', '14:25', '15:25', '16:25', '17:25', '18:25',
@@ -207,9 +265,9 @@ class HomeController extends Controller
             "periodes" => $periodes,
             "typesalles" => $typesalles,
             "accessoires" => $accessoires,
-            "heurefins"=>$heure_fins,
-            "heuredebuts"=>$heure_debuts,
-            "type_jour"=>$type_jour,
+            "heurefins" => $heure_fins,
+            "heuredebuts" => $heure_debuts,
+            "type_jour" => $type_jour,
             "typejours" => $typejours]);
     }
 
@@ -248,21 +306,21 @@ class HomeController extends Controller
             $conge = JourFerie::query()->where('date_debut', '<=', $date_)
                 ->where('date_fin', '>=', $date_)->first();
             if (is_null($conge)) {
-                $type_jour=1;
+                $type_jour = 1;
                 $heure_debuts = [
                     '08:25', '09:15', '10:05', '10:55',
-                    '11:45', '12:35', '13:25', '14:15', '15:05',
+                    '11:15', '12:05', '12:55', '14:05',
                     '------------ Fin des cours en matinée ------------',
-                    '16:30', '17:30', '18:30', '19:30', '20:30', '21:30',
+                    '16:00', '17:00', '18:00', '19:00', '20:00', '21:00',
                 ];
                 $heure_fins = [
                     '09:15', '10:05', '10:55',
-                    '11:45', '12:35', '13:25', '14:15', '15:05',
+                    '11:15', '12:05', '12:55', '14:05',
                     '------------ Fin des cours en matinée ------------',
-                    '17:30', '18:30', '19:30', '20:30', '21:30', '22:30',
+                    '17:00', '18:00', '19:00', '20:00', '21:00', '22:00',
                 ];
             } else {
-                $type_jour=2;
+                $type_jour = 2;
                 $heure_debuts = [
                     '08:25', '09:25', '10:25', '11:25',
                     '12:25', '13:25', '14:25', '15:25', '16:25', '17:25', '18:25',
@@ -277,7 +335,7 @@ class HomeController extends Controller
             return response()->json([
                 'begins' => $heure_debuts,
                 'ends' => $heure_fins,
-                'type_jour'=>$type_jour
+                'type_jour' => $type_jour
             ]);
         }
 
@@ -348,9 +406,9 @@ class HomeController extends Controller
         $reservation->end = $data['end'];
         $reservation->libelle = "RESERV " . $data['start'] . "-" . $data['end'];
         $reservation->status = "PENDING";
-        if ($data['jour_type']==1){
+        if ($data['jour_type'] == 1) {
             $reservation->contegent = "Periode contegeant";
-        }else{
+        } else {
             $reservation->contegent = "Periode non contegeant";
         }
 
@@ -393,26 +451,26 @@ class HomeController extends Controller
     {
         $reservation = Reservation::query()->find($id);
         $gestionnaire = Gestionnaire::query()->firstWhere('user_id', '=', $request->user()->id);
-        $line_accessoires=LineTypeAccessoire::query()->where('reservation_id','=',$id)->get();
-        foreach ($line_accessoires as $line_accessoire){
-            $accessoire=TypeAccessoire::query()->find($line_accessoire->type_accessoire_id);
-            if ($accessoire->quantite<$line_accessoire->nombre){
-                return redirect()->route('listreservation')->withErrors("Quantité ".$accessoire->libelle." insuffissant pour cette reservation."." Disponible ".$accessoire->quantite);
-            }else{
+        $line_accessoires = LineTypeAccessoire::query()->where('reservation_id', '=', $id)->get();
+        foreach ($line_accessoires as $line_accessoire) {
+            $accessoire = TypeAccessoire::query()->find($line_accessoire->type_accessoire_id);
+            if ($accessoire->quantite < $line_accessoire->nombre) {
+                return redirect()->route('listreservation')->withErrors("Quantité " . $accessoire->libelle . " insuffissant pour cette reservation." . " Disponible " . $accessoire->quantite);
+            } else {
                 $accessoire->update([
-                    'quantite'=>$accessoire->quantite-$line_accessoire->nombre
+                    'quantite' => $accessoire->quantite - $line_accessoire->nombre
                 ]);
             }
         }
         $reservation->update([
             'status' => Reservation::ACCEPTED,
-            'gestionnaire_id' => is_null($gestionnaire)?null:$gestionnaire->id
+            'gestionnaire_id' => is_null($gestionnaire) ? null : $gestionnaire->id
         ]);
         $int = DurationHelper::getCreanneauBetwennTimes($reservation->start, $reservation->end);
         for ($i = 1; $i < $int; $i++) {
             $begin = DurationHelper::addCrenneau($reservation->start, $i);
             $agenda = CaseAgenda::query()->where('date_jour', '=', $reservation->date_reservation)
-                ->where('type_jour_id', '=', $reservation->local_group->type_jour_id)
+                // ->where('type_jour_id', '=', $reservation->local_group->type_jour_id)
                 ->where('heure_debut', '=', $begin)->first();
 
             if (is_null($agenda)) {
@@ -421,7 +479,8 @@ class HomeController extends Controller
                     "libelle_jour" => date('D', strtotime($reservation->date_reservation)),
                     "heure_debut" => $begin,
                     "created_at" => new \DateTime('now'),
-                    "type_jour_id" => $reservation->local_group->type_jour_id,
+                    //"type_jour_id" => $reservation->local_group->type_jour_id,
+                    "type_jour_id" => null,
                 ]);
             }
             $reservation->agenda()->sync($agenda);
@@ -437,11 +496,11 @@ class HomeController extends Controller
         $commentaire = Commentaire::create([
             'message' => $request->get('message'),
             'reservation_id' => $reservation->id,
-            'gestionnaire_id' => is_null($gestionnaire)?null:$gestionnaire->id
+            'gestionnaire_id' => is_null($gestionnaire) ? null : $gestionnaire->id
         ]);
         $reservation->update([
             'status' => Reservation::DENIED,
-            'gestionnaire_id' => is_null($gestionnaire)?null:$gestionnaire->id
+            'gestionnaire_id' => is_null($gestionnaire) ? null : $gestionnaire->id
         ]);
         return redirect()->route('listreservation')->withSuccess('Update successful!');
     }
@@ -457,15 +516,17 @@ class HomeController extends Controller
 
         return redirect()->route('myreservation')->withSuccess('Delete successful!');
     }
+
     public function commentairereservation(Request $request)
     {
         $data = json_decode($request->getContent(), true);
         $reservation = Reservation::query()->find($request['reservation']);
-        $comment=Commentaire::query()->where('reservation_id','=',$request['reservation'])->first();
+        $comment = Commentaire::query()->where('reservation_id', '=', $request['reservation'])->first();
         return response()->json(
             $comment
         );
     }
+
     public function listreservation(ReservationDataTable $dataTable)
     {
         $pageTitle = "Liste des reservations";

@@ -17,4 +17,7 @@ class Gestionnaire extends User
     public function account() {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
+    public function grouplocals() {
+        return $this->belongsToMany(GroupLocal::class);
+    }
 }

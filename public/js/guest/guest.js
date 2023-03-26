@@ -1,5 +1,7 @@
 $(function () {
-   // var datet=new Date().toISOString().split('T')[0];
+    $("#calenda_week").hide()
+    $("#calenda_day").hide()
+    $("#calenda_month").show()
     var datet=$("#date_start").val();
     function selectDate(date) {
         $('#calendar-wrapper').updateCalendarOptions({

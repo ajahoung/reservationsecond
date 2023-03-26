@@ -100,9 +100,77 @@
                 <div class="col-lg-12">
                     <div class="card  ">
                         <div class="card-body">
-                            {{-- <div id="calendar1" class="calendar-s"></div>--}}
-                            <div id="calenda_day"></div>
-                            <div id="calenda_week"></div>
+                            <div id="calenda_day">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                        <th>Salles</th>
+                                        <th>{{$date_start}}</th>
+                                        </thead>
+                                        <tbody>
+                                        @foreach($body_days as $body)
+                                            <tr>
+                                                <td>
+                                                    <a href="{{route('agenda_day',['local'=>$body['line_id'],'date_start'=>$date_start])}}">{{$body['line']}}</a>
+                                                </td>
+                                                @foreach($body['occupations'] as $periode)
+
+                                                    <td onclick="window.location='{{route('addreservation_home',['date'=>$periode['date_jour']])}}'">
+                                                        <div  style="display: block;width: 100%;height: 100%">
+                                                            <a href="{{route('addreservation_home',['date'=>$periode['date_jour']])}}">
+                                                                @foreach($periode['agenda'] as $agenda)
+                                                                    <span
+                                                                        class="label  btn-sm btn-outline-dark">{{ $agenda['libelle'] }}</span>
+                                                                    <br>
+                                                                @endforeach
+                                                            </a></div>
+                                                    </td>
+
+                                                @endforeach
+                                            </tr>
+                                        @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div id="calenda_week">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                        <th>Salles</th>
+                                        @foreach($header_weeks as $periode)
+
+                                            <th>{{ $periode['day'] }}
+                                                <span>{{ $periode['number'] }}</span>
+                                            </th>
+                                        @endforeach
+                                        </thead>
+                                        <tbody>
+                                        @foreach($body_weeks as $body)
+                                            <tr>
+                                                <td>
+                                                    <a href="{{route('agenda_week',['local'=>$body['line_id'],'date_start'=>$date_start])}}">{{$body['line']}}</a>
+                                                </td>
+                                                @foreach($body['occupations'] as $periode)
+
+                                                    <td onclick="window.location='{{route('addreservation_home',['date'=>$periode['date_jour']])}}'">
+                                                        <div  style="display: block;width: 100%;height: 100%">
+                                                            <a href="{{route('addreservation_home',['date'=>$periode['date_jour']])}}">
+                                                                @foreach($periode['agenda'] as $agenda)
+                                                                    <span
+                                                                        class="label  btn-sm btn-outline-dark">{{ $agenda['libelle'] }}</span>
+                                                                    <br>
+                                                                @endforeach
+                                                            </a></div>
+                                                    </td>
+
+                                                @endforeach
+                                            </tr>
+                                        @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                             <div id="calenda_month">
                                 <div class="table-responsive">
                                     <table class="table table-bordered">

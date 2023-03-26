@@ -20,7 +20,15 @@ class PeriodeDataTable extends DataTable
     public function dataTable($query)
     {
         return datatables()
-            ->eloquent($query);
+            ->eloquent($query)
+            ->addColumn('action', function ($query) {
+
+                return '<div class="btn-group btn-group-sm">
+               <a class="btn btn-sm btn-success" href="' . route('periodeedit', ['id' => $query->id]) . '">Modifier</a>
+                 <a class="btn btn-sm btn-danger" href="' . route('periodedelete', ['id' => $query->id]) . '">Supprimer</a></div>';
+
+            })
+            ->rawColumns(['action', 'status']);;
     }
 
     /**
@@ -65,7 +73,14 @@ class PeriodeDataTable extends DataTable
     {
         return [
             Column::make('id'),
-            Column::make('libelle')
+            Column::make('libelle'),
+            Column::computed('action')
+                ->exportable(false)
+                ->printable(false)
+                ->searchable(false)
+                ->width(60)
+                ->addClass('text-center hide-search'),
+
         ];
     }
 

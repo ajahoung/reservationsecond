@@ -29,7 +29,15 @@ class GroupLocalDataTable extends DataTable
                     return "Congés & Féries";
                 }
 
-            });
+            })
+            ->addColumn('action', function ($query) {
+
+                return '<div class="btn-group btn-group-sm">
+               <a class="btn btn-sm btn-success" href="' . route('groupelocalgestionnaire', ['id' => $query->id]) . '">gestionnaire</a>
+                 <a class="btn btn-sm btn-danger" href="' . route('groupelocaldelete', ['id' => $query->id]) . '">Supprimer</a></div>';
+
+            })
+            ->rawColumns(['action', 'status']);
     }
 
     /**
@@ -79,6 +87,12 @@ class GroupLocalDataTable extends DataTable
            // ['data' => 'typesalle.type', 'name' => 'Type de salle', 'title' => 'Type de salle'],
             ['data' => 'type_jour_id', 'name' => 'Type de jour', 'title' => 'Type de jour'],
             Column::make('horaire_reservation'),
+            Column::computed('action')
+                ->exportable(false)
+                ->printable(false)
+                ->searchable(false)
+                ->width(60)
+                ->addClass('text-center hide-search'),
         ];
     }
 

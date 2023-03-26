@@ -76,4 +76,32 @@ class DateTimeHelper {
         }
         return $val;
     }
+    public static function getWeek($day){
+        $month = $day->format('m');
+        $day_number = $day->format('d');
+        $id_var = getdate(mktime(1, 1, 1, $month, $day_number, $day->format('y')));
+
+    }
+    public static function daysOfWeekXML($day)
+    {
+        // Give number of day in the week
+        $day_number = date('N', strtotime($day));
+
+        $day_week_futur = [];
+        $day_week_past = [];
+
+        // Retrieve future days in the week
+        for ($i = $day_number; $i <= 7; $i++) {
+            $next_day = strtotime('+' . $i - $day_number . ' day', strtotime($day));
+            array_push($day_week_futur, date('Y-m-d', $next_day));
+        }
+
+        // Retrieve days past in the week
+        for ($day_number; $day_number > 1; $day_number--) {
+            $previous_day = strtotime('-' . ($day_number - 1) . ' day', strtotime($day));
+            array_push($day_week_past, date('Y-m-d', $previous_day));
+        }
+        // Concatenate all days in the week in array
+        return array_merge($day_week_past, $day_week_futur);
+    }
 }

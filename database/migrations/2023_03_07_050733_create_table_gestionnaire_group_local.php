@@ -13,7 +13,7 @@ class CreateTableGestionnaireGroupLocal extends Migration
      */
     public function up()
     {
-        Schema::create('gestionnaires_group_locals', function (Blueprint $table) {
+        Schema::create('gestionnaire_group_local', function (Blueprint $table) {
             $table->id();
             $table->foreignId('group_local_id')->unsigned()->index();
             $table->foreignId('gestionnaire_id')->unsigned()->index();

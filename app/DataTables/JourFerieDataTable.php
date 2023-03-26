@@ -21,7 +21,14 @@ class JourFerieDataTable extends DataTable
     {
         return datatables()
             ->eloquent($query)
-            ->addColumn('action', 'jourferie.action');
+            ->addColumn('action', function ($query) {
+
+                return '<div class="btn-group btn-group-sm">
+               <a class="btn btn-sm btn-success" href="' . route('congeferieedit', ['id' => $query->id]) . '">Modifier</a>
+                 <a class="btn btn-sm btn-danger" href="' . route('congeferiedelete', ['id' => $query->id]) . '">Supprimer</a></div>';
+
+            })
+            ->rawColumns(['action', 'status']);;
     }
 
     /**
@@ -69,6 +76,12 @@ class JourFerieDataTable extends DataTable
             Column::make('libelle'),
             Column::make('date_debut'),
             Column::make('date_fin'),
+            Column::computed('action')
+                ->exportable(false)
+                ->printable(false)
+                ->searchable(false)
+                ->width(60)
+                ->addClass('text-center hide-search'),
         ];
     }
 

@@ -18,6 +18,9 @@ class GroupLocal extends Model
     public function locals() {
         return $this->belongsToMany(Local::class);
     }
+    public function gestionnaires() {
+        return $this->belongsToMany(Gestionnaire::class);
+    }
     public function typejours() {
         return $this->belongsTo(TypeJour::class, 'type_jour_id', 'id');
     }
