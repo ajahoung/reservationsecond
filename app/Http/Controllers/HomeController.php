@@ -53,7 +53,7 @@ class HomeController extends Controller
         for ($j = 0; $j <= 6; $j++) {
             $day_i = DateTimeHelper::daysOfWeekXML($date_start)[$j];
             $daym_ = new \DateTime($day_i);
-            $id_var = getdate(mktime(1, 1, 1, $month, $daym_->format('d'), $day->format('y')));
+            $id_var = getdate(mktime(1, 1, 1, $daym_->format('m'), $daym_->format('d'), $day->format('y')));
             $header_weeks[] = [
                 'day' => DateTimeHelper::getDayByNumber($id_var['wday']),
                 'number' => $day_i,

@@ -40,7 +40,7 @@ Route::get('/month', [HomeController::class, 'agenda_month'])->name('agenda_mont
 Route::get('/week', [HomeController::class, 'agenda_week'])->name('agenda_week');
 Route::get('/day', [HomeController::class, 'agenda_day'])->name('agenda_day');
 Route::get('/calendarevent', [HomeController::class, 'calendarevent'])->name('calendarevent');
-
+Route::get('ajax/getsalle', [HomeController::class, 'ajaxgetsalle'])->name('ajaxgetsalle');
 //Icons Page Routs
 Route::group(['prefix' => 'icons'], function() {
     Route::get('solid', [HomeController::class, 'solid'])->name('icons.solid');
@@ -53,7 +53,7 @@ Route::group(['middleware' => 'permission:role'], function () {
     Route::resource('users', UserController::class);
 });
 Route::group(['middleware' => 'role:super_admin|admin'], function () {
-    Route::get('/rapport_occupation', [RapportController::class, 'index'])->name('rapport.index');
+    Route::match(array('GET','POST'),'/rapport_occupation', [RapportController::class, 'index'])->name('rapport.index');
 
     Route::get('/indexgrouplocal', [ConfigController::class, 'indexgrouplocal'])->name('config.indexgrouplocal');
     Route::get('/indexlocal', [ConfigController::class, 'indexlocal'])->name('config.indexlocal');
@@ -130,7 +130,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('reservation/add', [HomeController::class, 'addreservation'])->name('addreservation');
     Route::get('reservation/addhome', [HomeController::class, 'addreservation_home'])->name('addreservation_home');
     Route::post('ajax/postreservation', [HomeController::class, 'ajaxpostreservation'])->name('ajaxpostreservation');
-    Route::get('ajax/getsalle', [HomeController::class, 'ajaxgetsalle'])->name('ajaxgetsalle');
+
 });
 //Auth pages Routs
 Route::group(['prefix' => 'auth'], function() {
