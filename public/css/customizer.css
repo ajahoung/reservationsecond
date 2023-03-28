@@ -6,6 +6,9 @@
 * NOTE: This file contains the styling for color variable.
 *
 */
+.text-primary {
+    color: #f0841f !important;
+}
 a {
   color: var(--bs-primary);
 }
@@ -24,7 +27,7 @@ body {
 
 :root {
   --bs-heading-color: #0c112e;
-  --bs-primary: #3a57e8;
+  --bs-primary: #f0841f;
   --bs-primary-shade-80: #0c112e;
   --bs-primary-shade-60: #17235d;
   --bs-primary-shade-40: #23348b;

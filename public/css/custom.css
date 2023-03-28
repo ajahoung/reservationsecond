@@ -6,6 +6,9 @@
 * NOTE: This file contains the styling for Template.
 *
 */
+.text-primary-logo {
+    color: #f0841f !important;
+}
 :focus {
   outline: none;
 }
