@@ -63,11 +63,12 @@
     <span class="uisheet screen-darken"></span>
     <input type="hidden" id="salle_id" value="{{$salle}}">
     <input type="hidden" id="date_start" value="{{$date_start}}">
-    <div class="header" style="background-size: cover; background-repeat: no-repeat; height: 20vh;position: relative;">
+    <div class="header" style="background-color:
+    #f0841f;background-size: cover; background-repeat: no-repeat; height: 20vh;position: relative;">
         <div class="main-img">
         </div>
         <div class="container">
-            <nav class="nav navbar navbar-expand-lg navbar-light top-1 rounded">
+            <nav class="nav navbar navbar-expand-lg navbar-light top-1 rounded" style="background-color: transparent">
                 <div class="container-fluid">
                     <a class="navbar-brand mx-2" href="#">
                         <svg width="30" class="text-primary" viewBox="0 0 30 30" fill="none"
@@ -81,7 +82,7 @@
                             <rect x="10.5562" y="-0.556152" width="28" height="4" rx="2"
                                   transform="rotate(45 10.5562 -0.556152)" fill="currentColor"></rect>
                         </svg>
-                        <h5 class="logo-title">{{env('APP_NAME')}}</h5>
+                        <h5 class="logo-title">Collège St-Michel de Bruxelles Système de réservation de salles</h5>
                     </a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-2"
                             aria-controls="navbar-2" aria-expanded="false" aria-label="Toggle navigation">

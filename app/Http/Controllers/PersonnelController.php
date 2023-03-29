@@ -72,4 +72,40 @@ class PersonnelController extends Controller
         }
 
     }
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param Request $request
+     */
+    public function edit($id,Request $request)
+    {
+        $local=User::query()->find($id);
+        if ($request->method()=="POST"){
+
+            $local->libelle = $request->libelle;
+            $local->save();
+            $local->group_locals()->sync($request->group_locals);
+
+            $b_ool = $local->update();
+            if ($b_ool) {
+                return redirect()->route('config.indexlocal')->withSuccess(__('Save success', ['name' => __('users.store')]));
+            } else {
+                return redirect()->route('config.indexlocal')->withErrors(__('message.msg_added', ['name' => __('users.store')]));
+            }
+        }
+        return view('administration.edit_personnel', [
+
+        ]);
+
+    }
+    public function delete($id,Request $request)
+    {
+        $user = User::query()->find($id);
+        $b_ool =$user->delete();
+        if ($b_ool) {
+            return redirect()->route('personnels.index')->withSuccess(__('Save success', ['name' => __('users.store')]));
+        } else {
+            return redirect()->route('personnels.index')->withErrors(__('update', ['name' => __('users.store')]));
+        }
+    }
 }
