@@ -100,7 +100,7 @@
                                     <rect x="10.5562" y="-0.556152" width="28" height="4" rx="2" transform="rotate(45 10.5562 -0.556152)" fill="currentColor"></rect>
                                 </svg>
                                 {{--<img src="img/logo-11.png" alt="{{env('APP_NAME')}}">--}}</a>
-                            <p>Login into your application</p>
+                            <p>Connectez vous</p>
                         </div>
                         <div class="fxt-form">
                             <form method="POST" action="{{ route('login') }}">
@@ -121,22 +121,22 @@
                                         <div class="fxt-checkbox-area">
                                             <div class="checkbox">
                                                 <input id="checkbox1" type="checkbox">
-                                                <label for="checkbox1">Keep me logged in</label>
+                                                <label for="checkbox1">Restez connecter</label>
                                             </div>
-                                            <a href="#" class="switcher-text">Forgot Password</a>
+                                            <a href="#" class="switcher-text">Mot de passe oublié</a>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="fxt-transformY-50 fxt-transition-delay-4">
-                                        <button type="submit" class="fxt-btn-fill">Log in</button>
+                                        <button type="submit" class="fxt-btn-fill">Se connecter</button>
                                     </div>
                                 </div>
                             </form>
                         </div>
                         <div class="fxt-style-line">
                             <div class="fxt-transformY-50 fxt-transition-delay-5">
-                                <h3>Or Login With</h3>
+                                <h3>Ou se connecter avec</h3>
                             </div>
                         </div>
                         <ul class="fxt-socials">
