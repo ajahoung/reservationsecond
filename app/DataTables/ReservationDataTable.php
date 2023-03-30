@@ -91,7 +91,7 @@ class ReservationDataTable extends DataTable
      */
     public function query(Reservation $model)
     {
-        return $model->newQuery()->with(['user', 'local', 'local_group']);
+        return $model->newQuery()->where('parent_id','=','0')->with(['user', 'local', 'local_group','periode']);
     }
 
     /**
@@ -126,13 +126,14 @@ class ReservationDataTable extends DataTable
         return [
             ['data' => 'status', 'name' => 'status', 'title' => 'Status'],
             Column::make('libelle'),
+            ['data' => 'periode.libelle', 'name' => 'Periode', 'title' => 'Periode'],
             ['data' => 'user.account', 'name' => 'User', 'title' => 'User'],
             ['data' => 'start', 'name' => 'Heure debut', 'title' => 'Heure debut'],
             ['data' => 'end', 'name' => 'Heure de fin', 'title' => 'Heure de fin'],
             ['data' => 'local_group.typejour', 'name' => 'Type jour', 'title' => 'Type jour'],
             ['data' => 'local_group.typesalle', 'name' => 'Type salle', 'title' => 'Type salle'],
             ['data' => 'local.libelle', 'name' => 'Local', 'title' => 'Local'],
-            ['data' => 'created_at', 'name' => 'Date creation', 'title' => 'Date creation'],
+            ['data' => 'date_reservation', 'name' => 'Date de reservation', 'title' => 'Date de reservation'],
             Column::computed('action')
                 ->exportable(false)
                 ->printable(false)

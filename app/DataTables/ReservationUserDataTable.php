@@ -66,7 +66,7 @@ class ReservationUserDataTable extends DataTable
                 return $typejour;
             })
             ->editColumn('local_group.typesalle', function ($query) {
-                $group = GroupLocal::query()->find($query->group_local_id);
+                $group = GroupLocal::query()->where('parent_id','=','0')->find($query->group_local_id);
                 $typesalle = $group->typesalle;
                 return $typesalle->type;
             })
@@ -92,8 +92,10 @@ class ReservationUserDataTable extends DataTable
     public function query(Reservation $model)
     {
         $user_id =auth()->user()->id ;
-        return $model->newQuery()->where('user_id', '=', $user_id)
-            ->with(['user', 'local'])->orderByDesc('id');
+        return $model->newQuery()
+            ->where('parent_id','=','0')
+            ->where('user_id', '=', $user_id)
+            ->with(['user', 'local','periode'])->orderByDesc('id');
     }
 
     /**
@@ -128,13 +130,14 @@ class ReservationUserDataTable extends DataTable
         return [
             ['data' => 'status', 'name' => 'status', 'title' => 'Status'],
             Column::make('libelle'),
+            ['data' => 'periode.libelle', 'name' => 'Periode', 'title' => 'Periode'],
             ['data' => 'user.account', 'name' => 'User', 'title' => 'User'],
             ['data' => 'start', 'name' => 'Heure debut', 'title' => 'Heure debut'],
             ['data' => 'end', 'name' => 'Heure de fin', 'title' => 'Heure de fin'],
             ['data' => 'local_group.typejour', 'name' => 'Type jour', 'title' => 'Type jour'],
             ['data' => 'local_group.typesalle', 'name' => 'Type salle', 'title' => 'Type salle'],
             ['data' => 'local.libelle', 'name' => 'Local', 'title' => 'Local'],
-            ['data' => 'created_at', 'name' => 'Date creation', 'title' => 'Date creation'],
+            ['data' => 'date_reservation', 'name' => 'Date de reservation', 'title' => 'Date de reservation'],
             Column::computed('action')
                 ->exportable(false)
                 ->printable(false)

@@ -90,7 +90,7 @@ class ReservationWaitingDataTable extends DataTable
      */
     public function query(Reservation $model)
     {
-        return $model->newQuery()->where('status','=','PENDING')->with(['user','local']);
+        return $model->newQuery()->where('status','=','PENDING')->with(['user','local','periode']);
     }
 
     /**
@@ -125,6 +125,7 @@ class ReservationWaitingDataTable extends DataTable
         return [
             ['data' => 'status', 'name' => 'status', 'title' => 'Status'],
             Column::make('libelle'),
+            ['data' => 'periode.libelle', 'name' => 'Periode', 'title' => 'Periode'],
             ['data' => 'user.account', 'name' => 'User', 'title' => 'User'],
             ['data' => 'start', 'name' => 'Heure debut', 'title' => 'Heure debut'],
             ['data' => 'end', 'name' => 'Heure de fin', 'title' => 'Heure de fin'],

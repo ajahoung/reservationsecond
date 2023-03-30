@@ -11,7 +11,7 @@
                         <h4 class="card-title">Edit local: {{$local->libelle}}</h4>
                     </div>
                 </div>
-                {{ Form::open(['url' => 'local/1/edit','method' => 'post']) }}
+                {{ Form::open(['url' => 'local/'.$local->id.'/edit','method' => 'post']) }}
                 <div class="card-body px-3">
 
                     <div class="row">

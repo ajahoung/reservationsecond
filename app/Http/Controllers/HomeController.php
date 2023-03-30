@@ -20,6 +20,7 @@ use App\Models\TypeAccessoire;
 use App\Models\TypeJour;
 use App\Models\TypeSalle;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class HomeController extends Controller
 {
@@ -315,7 +316,7 @@ class HomeController extends Controller
                 ];
                 $heure_fins = [
                     '09:15', '10:05', '10:55',
-                    '11:15', '12:05', '12:55', '14:05',
+                    '11:15', '12:05', '12:55', '14:05','15:05',
                     '------------ Fin des cours en matinée ------------',
                     '17:00', '18:00', '19:00', '20:00', '21:00', '22:00',
                 ];
@@ -406,6 +407,7 @@ class HomeController extends Controller
         $reservation->end = $data['end'];
         $reservation->libelle = "RESERV " . $data['start'] . "-" . $data['end'];
         $reservation->status = "PENDING";
+        $reservation->parent_id = 0;
         if ($data['jour_type'] == 1) {
             $reservation->contegent = "Periode contegeant";
         } else {
@@ -462,11 +464,11 @@ class HomeController extends Controller
                 ]);
             }
         }
-        $reservation->update([
+      $bool=  $reservation->update([
             'status' => Reservation::ACCEPTED,
             'gestionnaire_id' => is_null($gestionnaire) ? null : $gestionnaire->id
         ]);
-        $int = DurationHelper::getCreanneauBetwennTimes($reservation->start, $reservation->end);
+       $int = DurationHelper::getCreanneauBetwennTimes($reservation->start, $reservation->end);
         for ($i = 1; $i < $int; $i++) {
             $begin = DurationHelper::addCrenneau($reservation->start, $i);
             $agenda = CaseAgenda::query()->where('date_jour', '=', $reservation->date_reservation)
@@ -485,9 +487,132 @@ class HomeController extends Controller
             }
             $reservation->agenda()->sync($agenda);
         }
+        if ($bool){
+            $this->generateReservation($reservation);
+        }
+
         return redirect()->route('listreservation')->withSuccess('Update successful!');
     }
 
+    public function generateReservation(Reservation $reservation){
+        $periode=Periode::query()->find($reservation->periode_id);
+        $day_reservation=new \DateTime($reservation->date_reservation);
+        $current_month=$day_reservation->format('m');
+        $current_year=$day_reservation->format('Y');
+        $current_day=$day_reservation->format('d');
+        $id_var = getdate(mktime(1, 1, 1, $current_month, $current_day, $current_day));
+        $current_week=$day_reservation->format('w');
+        $numero_jour=$id_var['wday'];
+        if ($periode->frequence==1){//mois
+            for ($i=$current_month;$i<12;$i++){
+                $day=$current_year.'-'.$i.'-'.$current_day;
+                $validDay=DurationHelper::validateDate($day);
+                if (!$validDay){
+                    $day=$current_year.'-'.$i.'-'.$current_day-1;
+                }
+                $conge = JourFerie::query()->where('date_debut', '<=', $day)
+                    ->where('date_fin', '>=', $day)->first();
+
+                if ($conge) {
+                    $contegent = "Periode contegeant";
+                } else {
+                    $contegent = "Periode non contegeant";
+                }
+
+                Reservation::create([
+                    'date_reservation'=>$day,
+                    'contegent'=>$contegent,
+                    'libelle'=>$reservation->libelle,
+                    'end'=>$reservation->end ,
+                    'periode_id'=>$reservation->periode_id,
+                    'user_id'=>$reservation->user_id,
+                    'start'=>$reservation->start,
+                    'group_local_id'=>$reservation->group_local_id,
+                    'local_id'=>$reservation->local_id,
+                    'parent_id'=>$reservation->id,
+                    'status'=>$reservation->status,
+                ]);
+            }
+        }elseif ($periode->frequence==2){//semaine
+            for ($i=$current_week;$i>0;$i++){
+                $date=new \DateTime();
+                $date->setISODate($current_year,$i,$numero_jour);
+                $conge = JourFerie::query()->where('date_debut', '<=', $date)
+                    ->where('date_fin', '>=', $date)->first();
+                if ($conge) {
+                    $contegent = "Periode contegeant";
+                } else {
+                    $contegent = "Periode non contegeant";
+                }
+                Reservation::create([
+                    'date_reservation'=>$date,
+                    'contegent'=>$contegent,
+                    'libelle'=>$reservation->libelle,
+                    'end'=>$reservation->end ,
+                    'periode_id'=>$reservation->periode_id,
+                    'user_id'=>$reservation->user_id,
+                    'start'=>$reservation->start,
+                    'group_local_id'=>$reservation->group_local_id,
+                    'local_id'=>$reservation->local_id,
+                    'status'=>$reservation->status,
+                ]);
+            }
+        }elseif ($periode->frequence==3){//jour
+            $number_day=$day_reservation->format('z')+1;
+            for ($i=$number_day;$i<365;$i++){
+                $date=\DateTime::createFromFormat('z Y',$i.' '.$current_year);
+                $conge = JourFerie::query()->where('date_debut', '<=', $date)
+                    ->where('date_fin', '>=', $date)->first();
+                if ($conge) {
+                    $contegent = "Periode contegeant";
+                } else {
+                    $contegent = "Periode non contegeant";
+                }
+                Reservation::create([
+                    'date_reservation'=>$date,
+                    'contegent'=>$contegent,
+                    'libelle'=>$reservation->libelle,
+                    'end'=>$reservation->end ,
+                    'periode_id'=>$reservation->periode_id,
+                    'user_id'=>$reservation->user_id,
+                    'start'=>$reservation->start,
+                    'group_local_id'=>$reservation->group_local_id,
+                    'local_id'=>$reservation->local_id,
+                    'status'=>$reservation->status,
+                ]);
+            }
+
+        }elseif ($periode->frequence==4){//weekend
+            $number_day=$day_reservation->format('z')+1;
+            for ($i=$number_day;$i<365;$i++){
+                $date=\DateTime::createFromFormat('Y z',$current_year.' '.$i);
+
+                $conge = JourFerie::query()->where('date_debut', '<=', $date)
+                    ->where('date_fin', '>=', $date)->first();
+                $id_var = getdate(mktime(1, 1, 1, $date->format('m'), $date->format('d'), $date->format('y')));
+                if ($conge) {
+                    $contegent = "Periode contegeant";
+                } else {
+                    $contegent = "Periode non contegeant";
+                }
+                if ($id_var['wday']===6||$id_var['wday']===0){
+                    Reservation::create([
+                        'date_reservation'=>$date,
+                        'contegent'=>$contegent,
+                        'libelle'=>$reservation->libelle,
+                        'end'=>$reservation->end ,
+                        'periode_id'=>$reservation->periode_id,
+                        'user_id'=>$reservation->user_id,
+                        'start'=>$reservation->start,
+                        'group_local_id'=>$reservation->group_local_id,
+                        'local_id'=>$reservation->local_id,
+                        'status'=>$reservation->status,
+                    ]);
+                }
+
+            }
+        }
+    }
     public function annulerreservation(Request $request)
     {
         $reservation = Reservation::query()->find($request->get('reservation_id'));
@@ -563,27 +688,18 @@ class HomeController extends Controller
         return view('auth.user-privacy-setting');
     }
 
-    /*
-        * Icons Page Routs
-        */
 
-    public function solid(Request $request)
+    public function sendMail(Reservation $reservation)
     {
-        return view('icons.solid');
+        $group=GroupLocal::query()->find($reservation->group_local_id);
+        $gestionnaires=$group->gestionnaires();
+        $receives=[];
+        foreach ($gestionnaires as $gestionnaire){
+            $receives[]=[$gestionnaire->user->email];
+        }
+        Mail::to($receives)
+            ->cc($reservation->user())
+            ->send(new \App\Mail\reservation($reservation));
     }
 
-    public function outline(Request $request)
-    {
-        return view('icons.outline');
-    }
-
-    public function dualtone(Request $request)
-    {
-        return view('icons.dualtone');
-    }
-
-    public function colored(Request $request)
-    {
-        return view('icons.colored');
-    }
 }

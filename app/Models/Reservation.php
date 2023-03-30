@@ -23,6 +23,9 @@ class Reservation extends Model
         'libelle',
         'status',
         'date_reservation',
+        'contegent',
+        'group_local_id',
+        'parent_id'
     ];
     public function local() {
         return $this->belongsTo(Local::class, 'local_id', 'id');

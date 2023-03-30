@@ -26,4 +26,8 @@ class DurationHelper
             return date('H:i',strtotime('+'.$val.' minutes'));
         }
     }
+    public static function validateDate($date,$format='Ymd'){
+        $d=DateTime::createFromFormat($format,$date);
+        return $d && $d->format($format)===$date;
+    }
 }

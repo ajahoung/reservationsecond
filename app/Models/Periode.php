@@ -11,5 +11,6 @@ class Periode extends Model
     use HasFactory;
     protected $fillable = [
         'libelle',
+        'frequence',
     ];
 }

@@ -11,7 +11,7 @@
                         <h4 class="card-title">Edit Type salle: {{$typesalle->type}}</h4>
                     </div>
                 </div>
-                {{ Form::open(['url' => 'typesalle/1/edit','method' => 'post']) }}
+                {{ Form::open(['url' => 'typesalle/'.$typesalle->id.'/edit','method' => 'post']) }}
                 <div class="card-body px-3">
 
                     <div class="row">

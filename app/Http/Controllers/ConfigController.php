@@ -335,10 +335,13 @@ class ConfigController extends Controller
     public function periodeedit($id,Request $request){
         $periode=Periode::query()->find($id);
         if ($request->method()=="POST"){
-            $periode->libelle = $request->libelle;
-            $periode->save();
+            $periode_=Periode::query()->find($id);
+            $b_ool = $periode_->update(
+             [   'libelle'=>$request->request->get('libelle'),
+                 'frequence'=>$request->request->get('frequence'),
+                 ]
 
-            $b_ool = $periode->update();
+            );
             if ($b_ool) {
                 return redirect()->route('config.indexperiode')->withSuccess(__('Save success', ['name' => __('users.store')]));
             } else {
