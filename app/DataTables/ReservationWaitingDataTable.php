@@ -73,7 +73,7 @@ class ReservationWaitingDataTable extends DataTable
         ->addColumn('action', function ($query){
             if ($query->status == 'PENDING'){
                 return '<div class="btn-group-sm"><a class="btn btn-sm btn-success" href="'.route('activatereservation',['id'=>$query->id]).'">Valider</a>
-                 <a class="btn btn-sm btn-danger" data-bs-toggle="modal" onclick=getId("'.$query->id.'") data-bs-target="#refused-reservation">Refuser</a></div>';
+                 <a class="btn btn-sm btn-danger" onclick=getId("'.$query->id.'") data-bs-toggle="modal"  data-bs-target="#refused-reservation">Refuser</a></div>';
             }else{
                 return '';
             }
@@ -132,7 +132,7 @@ class ReservationWaitingDataTable extends DataTable
             ['data' => 'local_group.typejour', 'name' => 'Type jour', 'title' => 'Type jour'],
             ['data' => 'local_group.typesalle', 'name' => 'Type salle', 'title' => 'Type salle'],
             ['data' => 'local.libelle', 'name' => 'Local', 'title' => 'Local'],
-            ['data' => 'created_at', 'name' => 'Date creation', 'title' => 'Date creation'],
+            ['data' => 'date_reservation', 'name' => 'Date creation', 'title' => 'Date reservation'],
             Column::computed('action')
                 ->exportable(false)
                 ->printable(false)

@@ -91,7 +91,8 @@ class ReservationDataTable extends DataTable
      */
     public function query(Reservation $model)
     {
-        return $model->newQuery()->where('parent_id','=','0')->with(['user', 'local', 'local_group','periode']);
+        return $model->newQuery()
+            ->with(['user', 'local', 'local_group','periode']);
     }
 
     /**

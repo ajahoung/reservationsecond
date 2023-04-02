@@ -66,7 +66,7 @@ class ReservationUserDataTable extends DataTable
                 return $typejour;
             })
             ->editColumn('local_group.typesalle', function ($query) {
-                $group = GroupLocal::query()->where('parent_id','=','0')->find($query->group_local_id);
+                $group = GroupLocal::query()->find($query->group_local_id);
                 $typesalle = $group->typesalle;
                 return $typesalle->type;
             })
@@ -95,7 +95,7 @@ class ReservationUserDataTable extends DataTable
         return $model->newQuery()
             ->where('parent_id','=','0')
             ->where('user_id', '=', $user_id)
-            ->with(['user', 'local','periode'])->orderByDesc('id');
+            ->with(['user', 'local','local_group','periode'])->orderByDesc('id');
     }
 
     /**

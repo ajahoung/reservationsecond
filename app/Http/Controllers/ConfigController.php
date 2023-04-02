@@ -217,10 +217,12 @@ class ConfigController extends Controller
     public function groupelocalgestionnaire($id,Request $request)
     {
         $groupe = GroupLocal::query()->find($id);
-        $gestionnaires=Gestionnaire::query()->leftJoin('users','users.id','=','gestionnaire.id')->pluck('users.first_name','gestionnaire.id');
-
+        $gestionnaires=Gestionnaire::query()->join('users','users.id','=','gestionnaire.user_id')->pluck('users.first_name','gestionnaire.id');
+        $list=[];
         if ($request->method()=="POST"){
-            $groupe->gestionnaires()->sync($request->gestionnaire);
+            $list=$groupe->gestionnaires();
+          //  $list[]=$request->request->get('gestionnaire');
+            $groupe->gestionnaires()->sync($request->request->get('gestionnaire'));
             $b_ool = $groupe->save();
             if ($b_ool) {
                 return redirect()->route('groupelocalgestionnaire',['id'=>$id])->withSuccess(__('Save success', ['name' => __('users.store')]));
@@ -244,6 +246,16 @@ class ConfigController extends Controller
     public function groupelocaldelete($id,Request $request)
     {
         $groupe = GroupLocal::query()->find($id);
+        $b_ool =$groupe->delete();
+        if ($b_ool) {
+            return redirect()->route('config.indexgrouplocal')->withSuccess(__('Save success', ['name' => __('users.store')]));
+        } else {
+            return redirect()->route('config.indexgrouplocal')->withErrors(__('update', ['name' => __('users.store')]));
+        }
+    }
+    public function periodedelete($id,Request $request)
+    {
+        $groupe = Periode::query()->find($id);
         $b_ool =$groupe->delete();
         if ($b_ool) {
             return redirect()->route('config.indexgrouplocal')->withSuccess(__('Save success', ['name' => __('users.store')]));

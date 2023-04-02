@@ -16,7 +16,7 @@ class AddForeignKey extends Migration
         Schema::table('group_local', function (Blueprint $table) {
             $table->foreign('type_salle_id')->references('id')->on('type_salle');
         });
-        Schema::table('gestionnaires_group_locals', function (Blueprint $table) {
+        Schema::table('gestionnaire_group_local', function (Blueprint $table) {
             $table->foreign('group_local_id')->references('id')->on('group_local');
             $table->foreign('gestionnaire_id')->references('id')->on('gestionnaire');
         });
@@ -35,7 +35,7 @@ class AddForeignKey extends Migration
         Schema::table('reservation', function (Blueprint $table) {
             $table->foreign('local_id')->references('id')->on('local');
             $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('periode_id')->references('id')->on('periode');
+            $table->foreign('periode_id')->nullOnDelete()->references('id')->on('periode');
             $table->foreign('gestionnaire_id')->references('id')->on('gestionnaire');
             $table->foreign('group_local_id')->references('id')->on('group_local');
         });
