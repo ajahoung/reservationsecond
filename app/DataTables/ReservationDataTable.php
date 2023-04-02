@@ -127,7 +127,7 @@ class ReservationDataTable extends DataTable
         return [
             ['data' => 'status', 'name' => 'status', 'title' => 'Status'],
             Column::make('libelle'),
-            ['data' => 'periode.libelle', 'name' => 'Periode', 'title' => 'Periode'],
+          //  ['data' => 'periode.libelle', 'name' => 'Periode', 'title' => 'Periode'],
             ['data' => 'user.account', 'name' => 'User', 'title' => 'User'],
             ['data' => 'start', 'name' => 'Heure debut', 'title' => 'Heure debut'],
             ['data' => 'end', 'name' => 'Heure de fin', 'title' => 'Heure de fin'],
