@@ -20,7 +20,8 @@ $(function () {
         date: datet,
         onClickDate: selectDate,
         showYearDropdown: true,
-        startOnMonday: false,
+        startOnMonday: true,
+        min:new Date()
     };
 
     var calendar = $('#calendar-wrapper').calendar(defaultConfig);

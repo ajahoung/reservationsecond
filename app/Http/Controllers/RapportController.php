@@ -73,7 +73,7 @@ class RapportController extends Controller
 
            $pdf = PDF::loadView('rapport.pdf', $data);
 
-           return $pdf->download('codesolutionstuff.pdf');
+           return $pdf->download('reservationweb.pdf');
        }
         return view('rapport.index', [
             "locals"=>$locals,

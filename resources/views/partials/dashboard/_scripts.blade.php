@@ -54,6 +54,7 @@
     var configs={
         routes:{
             index: "{{\Illuminate\Support\Facades\URL::to('/')}}",
+            verifyquantity: "{{\Illuminate\Support\Facades\URL::to('ajax/verifyquantity')}}",
             myreservation: "{{\Illuminate\Support\Facades\URL::to('myreservation')}}",
             startreservation: "{{\Illuminate\Support\Facades\URL::to('reservation/addhome')}}",
             reservation_getsalle: "{{\Illuminate\Support\Facades\URL::route('ajaxgetsalle')}}",

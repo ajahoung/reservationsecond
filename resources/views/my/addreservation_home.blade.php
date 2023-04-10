@@ -107,14 +107,39 @@
             })
         })
         $('#add_line').click(function () {
-
+            $('#status_accessoire').text('')
             var qte = $('#qte').val();
             var id = $('#type_accessoire option:selected').val();
             var libelle = $('#type_accessoire option:selected').text();
             var idtd = "line_" + id;
-            $("#table_accessoire>tbody:last").append("<tr id='" + idtd + "'><td>" +
-                "<input class='checkbox hidden' type='checkbox' checked><span class='hidden' hidden>" + id + "</span></td>" +
-                "<td>" + libelle + "</td><td>" + qte + "</td><td><a onclick='removeRow(" + id + ")' class='btn btn-sm btn-danger'>Del</a></td></tr>");
+            $.ajax({
+                url: configs.routes.verifyquantity,
+                data: {
+                    id: id,
+                    quantity: qte,
+                },
+                type: "GET",
+                success: function (data) {
+
+                    if(data.status){
+                        $("#table_accessoire>tbody:last").append("<tr id='" + idtd + "'><td>" +
+                            "<input class='checkbox hidden' type='checkbox' checked><span class='hidden' hidden>" + id + "</span></td>" +
+                            "<td>" + libelle + "</td><td>" + qte + "</td><td><a onclick='removeRow(" + id + ")' class='btn btn-sm btn-danger'>Del</a></td></tr>");
+
+                    }else{
+                        $('#status_accessoire').text('Quantité disponible: '+data.quantity)
+                    }
+
+                },
+                error: function (error) {
+
+                }
+            })
+
+            /*    $("#table_accessoire>tbody:last").append("<tr id='" + idtd + "'><td>" +
+                    "<input class='checkbox hidden' type='checkbox' checked><span class='hidden' hidden>" + id + "</span></td>" +
+                    "<td>" + libelle + "</td><td>" + qte + "</td><td><a onclick='removeRow(" + id + ")' class='btn btn-sm btn-danger'>Del</a></td></tr>");
+           */
         })
         $('#btn-save').click(function () {
             $.ajaxSetup({
@@ -254,24 +279,6 @@
                                     @endforeach
                                 </select>
                             </div>
-                           {{-- <div class="form-group col-md-4 mt-2">
-                                <label class="form-label">Type de jours: <span class="text-danger">*</span></label>
-                                <select class="form-select" id="typejour">
-                                    <option>selectionnez type jour</option>
-                                    <option value="1">Jours scolaires</option>
-                                    <option value="2">Jours feriés</option>
-                                    <option value="3">Weekends</option>
-                                    <option value="4">Congés</option>
-                                </select>
-                            </div>--}}
-                          {{--  <h5>Horaire de reservation</h5>
-                            <div class="col-md-12 mt-2 mb-3">
-                                <div class="form-check col-md-4"><input class="form-check-input"  value="08h25-15h45" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-                                    <label class="form-check-label" for="flexRadioDefault1">08h25-15h45</label> </div>
-                                <div class="form-check col-md-4"><input class="form-check-input"  value="16h00-22h30" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-                                    <label class="form-check-label" for="flexRadioDefault1">16h00-22h30</label> </div>
-                            </div>--}}
-
                             <div class="col-md-6">
                                 <label class="form-label" for="r_time">Heure de debut: </label>
                                 <select class="form-select" id="r_time">
@@ -317,6 +324,9 @@
                                     <button class="btn btn-success btn-sm mt-2" id="add_line">
                                         Ajouter
                                     </button>
+                                </div>
+                                <div class="col-md-3 mt-3">
+                                <span class="badge-danger btn-danger" id="status_accessoire"></span>
                                 </div>
                             </div>
                             <table class="mt-3 table table-bordered px-3" id="table_accessoire">

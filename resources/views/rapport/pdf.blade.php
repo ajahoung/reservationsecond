@@ -110,7 +110,7 @@
     <thead class="th-head">
     <tr>
     <th style="width: 20%;">Local</th>
-    <th style="width: 15%;">Date</th>
+    <th style="width: 15%;">Date Reservation</th>
         <th style="width: 15%;">H.debut</th>
         <th style="width: 15%;">H.fin</th>
     <th style="width: 20%;">Utilisateur</th>
@@ -120,7 +120,7 @@
     @foreach($reservations as $reservation)
     <tr>
         <td>{{$reservation->local->libelle}}</td>
-        <td>{{$reservation->date_reservation}}</td>
+        <td>{{date('Y-m-d',strtotime($reservation->date_reservation))}}</td>
         <td>{{$reservation->start}}</td>
         <td>{{$reservation->end}}</td>
         <td>{{$reservation->user->first_name}} {{$reservation->user->last_name}}</td>

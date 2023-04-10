@@ -130,6 +130,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('reservation/add', [HomeController::class, 'addreservation'])->name('addreservation');
     Route::get('reservation/addhome', [HomeController::class, 'addreservation_home'])->name('addreservation_home');
     Route::post('ajax/postreservation', [HomeController::class, 'ajaxpostreservation'])->name('ajaxpostreservation');
+    Route::get('ajax/verifyquantity', [HomeController::class, 'verifyQuantity'])->name('verifyquantity');
 
 });
 //Auth pages Routs

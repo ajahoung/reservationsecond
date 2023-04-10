@@ -70,17 +70,18 @@ class HomeController extends Controller
                 $date_array = getdate(mktime(1, 1, 1, $month, $i, $day->format('y')));
                 $date_jour_end = date('Y-m-d', mktime(23, 0, 0, $month, $i, $day->format('y')));
                 $date_jour = date('Y-m-d', mktime(0, 0, 0, $month, $i, $day->format('y')));
-                $reservations = Reservation::query()->where('status', '=', Reservation::ACCEPTED)->where('local_id', '=', $salle->id)->where('date_reservation', '>=', $date_jour)
+                $reservations = Reservation::query()->where('status', '!=', Reservation::DENIED)->where('local_id', '=', $salle->id)->where('date_reservation', '>=', $date_jour)
                     ->where('date_reservation', '<', $date_jour . ' 23:00:00')->get();
                 $line_reservation[] = [
                     'day' => $date_jour_end,
+
                     'date_jour' => $date_jour,
                     'agenda' => $reservations,
                 ];
             }
             for ($j = 0; $j <= 6; $j++) {
                 $day_i = DateTimeHelper::daysOfWeekXML($date_start)[$j];
-                $reservations = Reservation::query()->where('status', '=', Reservation::ACCEPTED)
+                $reservations = Reservation::query()->where('status', '!=', Reservation::DENIED)
                     ->where('local_id', '=', $salle->id)
                     ->where('date_reservation', '>=', $day_i)
                     ->where('date_reservation', '<', $day_i . ' 23:00:00')->get();
@@ -93,7 +94,7 @@ class HomeController extends Controller
 
             for ($k = 0; $k < 1; $k++) {
                 $day_i = $date_start;
-                $reservations_ = Reservation::query()->where('status', '=', Reservation::ACCEPTED)
+                $reservations_ = Reservation::query()->where('status', '!=', Reservation::DENIED)
                     ->where('local_id', '=', $salle->id)
                     ->where('date_reservation', '>=', $day_i)
                     ->where('date_reservation', '<', $day_i . ' 23:00:00')->get();
@@ -222,7 +223,8 @@ class HomeController extends Controller
         $typesalles = TypeSalle::all();
         $typejours = TypeJour::all();
         $periodes = Periode::all();
-        return view('my.addreservation', ["periodes" => $periodes, "typesalles" => $typesalles, "accessoires" => $accessoires, "typejours" => $typejours]);
+        return view('my.addreservation', ["periodes" => $periodes, "typesalles" => $typesalles,
+            "accessoires" => $accessoires, "typejours" => $typejours,'date'=>date('Y-m-d')]);
     }
 
     public function addreservation_home(Request $request)
@@ -232,6 +234,9 @@ class HomeController extends Controller
         $typejours = TypeJour::all();
         $periodes = Periode::all();
         $date_ = $request->get('date');
+        if ($date_<date('Y-m-d')){
+            return redirect()->route('index')->with('error','Impossible d\'effectuer une reservation a cette date');
+        }
         $conge = JourFerie::query()->where('date_debut', '<=', $date_)
             ->where('date_fin', '>=', $date_)->first();
         if (is_null($conge)) {
@@ -396,37 +401,50 @@ class HomeController extends Controller
         $data = json_decode($request->getContent(), true);
         $user_id = $request->user()->id;
         $ob = $data['ob'];
-        $reservation = new Reservation();
-        $reservation->local_id = $data['local'];
-        $reservation->start = $data['start'];
-        $reservation->group_local_id = $data['group_local'];
-        $reservation->user_id = $user_id;
+        $reservation = Reservation::query()->where('user_id','=',$user_id)
+            ->where('date_reservation','=',$data['date_reservation'])
+            ->first();
+        if (is_null($reservation)){
+            $reservation = new Reservation();
+            $reservation->local_id = $data['local'];
+            $reservation->start = $data['start'];
+            $reservation->group_local_id = $data['group_local'];
+            $reservation->user_id = $user_id;
 
-        $reservation->periode_id = $data['periode'];
-        $date_ = new \DateTime($data['date_reservation']);
-        $reservation->end = $data['end'];
-        $reservation->libelle = "RESERV " . $data['start'] . "-" . $data['end'];
-        $reservation->status = "PENDING";
-        $reservation->parent_id = 0;
-        if ($data['jour_type'] == 1) {
-            $reservation->contegent = "Periode contegeant";
-        } else {
-            $reservation->contegent = "Periode non contegeant";
+            $reservation->periode_id = $data['periode'];
+            $date_ = new \DateTime($data['date_reservation']);
+            $reservation->end = $data['end'];
+            $reservation->libelle = "RESERV " . $data['start'] . "-" . $data['end'];
+            $reservation->status = "PENDING";
+            $reservation->parent_id = 0;
+            if ($data['jour_type'] == 1) {
+                $reservation->contegent = "Periode contegeant";
+            } else {
+                $reservation->contegent = "Periode non contegeant";
+            }
+
+            $reservation->date_reservation = $date_;
+            $reservation->save();
+            for ($i = 0; $i < sizeof($ob); ++$i) {
+                $line_accessoire = new LineTypeAccessoire();
+                $quantity = $ob[$i]['quantity'];
+                $line_accessoire->reservation_id = $reservation->id;
+                $line_accessoire->type_accessoire_id = $ob[$i]['id'];
+                $line_accessoire->nombre = $quantity;
+                $line_accessoire->save();
+            }
+            $res=[
+                'status'=>true,
+                'message'=>'Reservation enregistrée avec success'
+            ];
+        }else{
+            $res=[
+                'status'=>false,
+                'message'=>'Impossible : reservation deja enregistre'
+            ];
         }
 
-        $reservation->date_reservation = $date_;
-        $reservation->save();
-        for ($i = 0; $i < sizeof($ob); ++$i) {
-            $line_accessoire = new LineTypeAccessoire();
-            $quantity = $ob[$i]['quantity'];
-            $line_accessoire->reservation_id = $reservation->id;
-            $line_accessoire->type_accessoire_id = $ob[$i]['id'];
-            $line_accessoire->nombre = $quantity;
-            $line_accessoire->save();
-        }
-        return response()->json([
-            $date_, $data['date_reservation'],
-        ]);
+        return response()->json($res);
     }
 
     public function myreservation(ReservationUserDataTable $dataTable)
@@ -651,7 +669,26 @@ class HomeController extends Controller
             $comment
         );
     }
-
+    public function verifyQuantity(Request $request)
+    {
+        $quantity=$request->get('quantity');
+        $id=$request->get('id');
+        $type = TypeAccessoire::query()->find($id);
+        if ($type->quantite<$quantity){
+            $res=[
+                'status'=>false,
+                'quantity'=>$type->quantite
+            ];
+        }else{
+            $res=[
+                'status'=>true,
+                'quantity'=>$type->quantite
+            ];
+        }
+       return response()->json(
+            $res
+        );
+    }
     public function listreservation(ReservationDataTable $dataTable)
     {
         $pageTitle = "Liste des reservations";
