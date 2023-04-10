@@ -401,7 +401,10 @@ class HomeController extends Controller
         $data = json_decode($request->getContent(), true);
         $user_id = $request->user()->id;
         $ob = $data['ob'];
-        $reservation = Reservation::query()->where('user_id','=',$user_id)
+        $reservation = Reservation::query()
+            ->where('local_id','=',$data['local'])
+            ->where('start','=',$data['start'])
+            ->where('end','=',$data['end'])
             ->where('date_reservation','=',$data['date_reservation'])
             ->first();
         if (is_null($reservation)){
@@ -431,6 +434,10 @@ class HomeController extends Controller
                 $line_accessoire->reservation_id = $reservation->id;
                 $line_accessoire->type_accessoire_id = $ob[$i]['id'];
                 $line_accessoire->nombre = $quantity;
+                $accessoire=TypeAccessoire::query()->find($ob[$i]['id']);
+              /*  $accessoire->update([
+                    'quantite' => $accessoire->quantite - $quantity
+                ]);*/
                 $line_accessoire->save();
             }
             $res=[
