@@ -117,10 +117,12 @@
                                                 @foreach($body['occupations'] as $periode)
 
                                                     <td onclick="window.location='{{route('addreservation_home',['date'=>$periode['date_jour']])}}'">
-                                                        <div  style="display: block;width: 100%;height: 100%">
+                                                        <div style="display: block;width: 100%;height: 100%">
                                                             <a href="{{route('addreservation_home',['date'=>$periode['date_jour']])}}">
                                                                 @foreach($periode['agenda'] as $agenda)
-                                                                    <span title="{{$agenda['status']}}" class="label  btn-sm @if($agenda['status']=="PENDING") btn-dark @else btn-outline-success @endif">{{ $agenda['libelle'] }}</span>
+                                                                    <span title="{{$agenda['status']}}" class="label  btn-sm
+                                                                 @if($agenda['status']=="PENDING") btn-dark
+                                                                 @else btn-outline-success @endif">{{ $agenda['libelle'] }}</span>
                                                                     <br>
                                                                 @endforeach
                                                             </a></div>
@@ -154,10 +156,11 @@
                                                 @foreach($body['occupations'] as $periode)
 
                                                     <td onclick="window.location='{{route('addreservation_home',['date'=>$periode['date_jour']])}}'">
-                                                        <div  style="display: block;width: 100%;height: 100%">
+                                                        <div style="display: block;width: 100%;height: 100%">
                                                             <a href="{{route('addreservation_home',['date'=>$periode['date_jour']])}}">
                                                                 @foreach($periode['agenda'] as $agenda)
-                                                                    <span title="{{$agenda['status']}}" class="label  btn-sm @if($agenda['status']=="PENDING") btn-dark @else btn-outline-success @endif">{{ $agenda['libelle'] }}</span>
+                                                                    <span title="{{$agenda['status']}}"
+                                                                          class="label  btn-sm @if($agenda['status']=="PENDING") btn-dark @else btn-outline-success @endif">{{ $agenda['libelle'] }}</span>
                                                                     <br>
                                                                 @endforeach
                                                             </a></div>
@@ -191,13 +194,14 @@
                                                 @foreach($body['occupations'] as $periode)
 
                                                     <td @if(!is_null($agenda)) onclick="window.location='{{route('addreservation_home',['date'=>$periode['date_jour']])}}'" @endif>
-                                                        <div  style="display: block;width: 100%;height: 100%">
+                                                        <div style="display: block;width: 100%;height: 100%">
                                                             <a href="{{route('addreservation_home',['date'=>$periode['date_jour']])}}">
-                                                        @foreach($periode['agenda'] as $agenda)
-                                                                    <span title="{{$agenda['status']}}" class="label  btn-sm @if($agenda['status']=="PENDING") btn-dark @else btn-outline-success @endif">{{ $agenda['libelle'] }}</span>
-                                                            <br>
-                                                        @endforeach
-                                                        </a></div>
+                                                                @foreach($periode['agenda'] as $agenda)
+                                                                    <span title="{{$agenda['status']}}"
+                                                                          class="label  btn-sm @if($agenda['status']=="PENDING") btn-dark @else btn-outline-success @endif">{{ $agenda['libelle'] }}</span>
+                                                                    <br>
+                                                                @endforeach
+                                                            </a></div>
                                                     </td>
 
                                                 @endforeach

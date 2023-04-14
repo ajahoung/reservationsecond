@@ -70,18 +70,21 @@ class HomeController extends Controller
                 $date_array = getdate(mktime(1, 1, 1, $month, $i, $day->format('y')));
                 $date_jour_end = date('Y-m-d', mktime(23, 0, 0, $month, $i, $day->format('y')));
                 $date_jour = date('Y-m-d', mktime(0, 0, 0, $month, $i, $day->format('y')));
-                $reservations = Reservation::query()->where('status', '!=', Reservation::DENIED)->where('local_id', '=', $salle->id)->where('date_reservation', '>=', $date_jour)
+                $reservations = Reservation::query()
+                    ->where('status', '!=', Reservation::DENIED)
+                    ->where('local_id', '=', $salle->id)
+                    ->where('date_reservation', '>=', $date_jour)
                     ->where('date_reservation', '<', $date_jour . ' 23:00:00')->get();
                 $line_reservation[] = [
                     'day' => $date_jour_end,
-
                     'date_jour' => $date_jour,
                     'agenda' => $reservations,
                 ];
             }
             for ($j = 0; $j <= 6; $j++) {
                 $day_i = DateTimeHelper::daysOfWeekXML($date_start)[$j];
-                $reservations = Reservation::query()->where('status', '!=', Reservation::DENIED)
+                $reservations = Reservation::query()
+                    ->where('status', '!=', Reservation::DENIED)
                     ->where('local_id', '=', $salle->id)
                     ->where('date_reservation', '>=', $day_i)
                     ->where('date_reservation', '<', $day_i . ' 23:00:00')->get();
