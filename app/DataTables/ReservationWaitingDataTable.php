@@ -90,7 +90,9 @@ class ReservationWaitingDataTable extends DataTable
      */
     public function query(Reservation $model)
     {
-        return $model->newQuery()->where('status','=','PENDING')->with(['user','local','periode']);
+        return $model->newQuery()
+            ->where('status','=','PENDING')
+            ->with(['user','user:first_name','local','periode']);
     }
 
     /**
@@ -126,13 +128,13 @@ class ReservationWaitingDataTable extends DataTable
             ['data' => 'status', 'name' => 'status', 'title' => 'Status'],
             Column::make('libelle'),
            // ['data' => 'periode.libelle', 'name' => 'Periode', 'title' => 'Periode'],
-            ['data' => 'user.account', 'name' => 'User', 'title' => 'User'],
-            ['data' => 'start', 'name' => 'Heure debut', 'title' => 'Heure debut'],
-            ['data' => 'end', 'name' => 'Heure de fin', 'title' => 'Heure de fin'],
-            ['data' => 'local_group.typejour', 'name' => 'Type jour', 'title' => 'Type jour'],
-            ['data' => 'local_group.typesalle', 'name' => 'Type salle', 'title' => 'Type salle'],
-            ['data' => 'local.libelle', 'name' => 'Local', 'title' => 'Local'],
-            ['data' => 'date_reservation', 'name' => 'Date creation', 'title' => 'Date reservation'],
+            ['data' => 'user.account', 'name' => 'user.first_name', 'title' => 'User'],
+            ['data' => 'start', 'name' => 'start', 'title' => 'Heure debut'],
+            ['data' => 'end', 'name' => 'end', 'title' => 'Heure de fin'],
+            ['data' => 'local_group.typejour', 'name' => 'group_local_id', 'title' => 'Type jour'],
+            ['data' => 'local_group.typesalle', 'name' => 'group_local_id', 'title' => 'Type salle'],
+            ['data' => 'local.libelle', 'name' => 'local.libelle', 'title' => 'Local'],
+            ['data' => 'date_reservation', 'name' => 'date_reservation', 'title' => 'Date reservation'],
             Column::computed('action')
                 ->exportable(false)
                 ->printable(false)

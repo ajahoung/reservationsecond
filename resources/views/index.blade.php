@@ -193,7 +193,7 @@
                                                 </td>
                                                 @foreach($body['occupations'] as $periode)
 
-                                                    <td @if(!is_null($agenda)) onclick="window.location='{{route('addreservation_home',['date'=>$periode['date_jour']])}}'" @endif>
+                                                    <td @if(!is_null($periode)) onclick="window.location='{{route('addreservation_home',['date'=>$periode['date_jour']])}}'" @endif>
                                                         <div style="display: block;width: 100%;height: 100%">
                                                             <a href="{{route('addreservation_home',['date'=>$periode['date_jour']])}}">
                                                                 @foreach($periode['agenda'] as $agenda)
