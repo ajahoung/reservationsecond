@@ -22,6 +22,9 @@
                 data: {
                     typesalle: $('#typesalle').val(),
                     typejour: $('#typejour').val(),
+                    date: $('#r_date').val(),
+                    start: $('#r_time').val(),
+                    end: $('#r_time_end').val(),
                     'horaire_reservation': $('#reservation_horaire input[type=radio]:checked').val(),
                     mode: 'getlocal'
                 },

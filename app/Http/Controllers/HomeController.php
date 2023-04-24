@@ -19,6 +19,7 @@ use App\Models\Reservation;
 use App\Models\TypeAccessoire;
 use App\Models\TypeJour;
 use App\Models\TypeSalle;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
@@ -74,7 +75,9 @@ class HomeController extends Controller
                     ->where('status', '!=', Reservation::DENIED)
                     ->where('local_id', '=', $salle->id)
                     ->where('date_reservation', '>=', $date_jour)
-                    ->where('date_reservation', '<', $date_jour . ' 23:00:00')->get();
+                    ->where('date_reservation', '<', $date_jour . ' 23:00:00')
+                    ->orderBy('start','asc')
+                    ->get();
                 $line_reservation[] = [
                     'day' => $date_jour_end,
                     'date_jour' => $date_jour,
@@ -87,7 +90,8 @@ class HomeController extends Controller
                     ->where('status', '!=', Reservation::DENIED)
                     ->where('local_id', '=', $salle->id)
                     ->where('date_reservation', '>=', $day_i)
-                    ->where('date_reservation', '<', $day_i . ' 23:00:00')->get();
+                    ->where('date_reservation', '<', $day_i . ' 23:00:00')
+                    ->orderBy('start','asc')->get();
                 $line_reservation_week[] = [
                     'day' => $date_jour_end,
                     'date_jour' => $day_i,
@@ -100,7 +104,8 @@ class HomeController extends Controller
                 $reservations_ = Reservation::query()->where('status', '!=', Reservation::DENIED)
                     ->where('local_id', '=', $salle->id)
                     ->where('date_reservation', '>=', $day_i)
-                    ->where('date_reservation', '<', $day_i . ' 23:00:00')->get();
+                    ->where('date_reservation', '<', $day_i . ' 23:00:00')
+                    ->orderBy('start','asc')->get();
                 $line_reservation_day[] = [
                     'day' => $date_jour_end,
                     'date_jour' => $day_i,
@@ -297,11 +302,27 @@ class HomeController extends Controller
         $typejour = $request->get('typejour');
         if ($request->get('mode') == "getlocal") {
             $horaire = $request->get('horaire_reservation');
+            $start=$request->get('start');
+            $end=$request->get('end');
+            $date_reservation=$request->get('date');
+            $reservation=Reservation::query()->where('start','=',$start)
+               // ->where('end','=',$end)
+                ->where('date_reservation', '=', $date_reservation. ' 00:00:00')
+                //->where('date_reservation', '<', $date_reservation . ' 23:00:00')
+                ->first();
             $group = GroupLocal::query()->firstWhere('type_salle_id', '=', $salle)
                 ->where('type_jour_id', '=', $typejour)->getModel();
-            $locals = $group->locals;
+            $locals = $group->locals()->get()->toArray();
+            if(!is_null($reservation)){
+              $locals=  array_filter($locals,function ($tem) use ($reservation){
+                 // return in_array($tem,res)
+                    return $tem ==$reservation->local();
+                });
+            }
+
             return response()->json([
                 'locals' => $locals,
+                'exemple'=>$reservation,
                 'group_id' => $group->id,
             ]);
         } elseif ($request->get('mode') == "getsalle") {
@@ -447,6 +468,12 @@ class HomeController extends Controller
                 'status'=>true,
                 'message'=>'Reservation enregistrée avec success'
             ];
+            $user=User::query()->find('id')->get();
+            $data_ = array('name' => $user->name, 'content' => "Votre reservation est enregistreé avec success et est en cours de traitement");
+            Mail::send(['text' => 'mail'], $data_, function ($message) use ($user) {
+                $message->to($user->email, $user->name)->subject("Creation reservation");
+                $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
+            });
         }else{
             $res=[
                 'status'=>false,

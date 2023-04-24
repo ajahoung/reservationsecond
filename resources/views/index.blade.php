@@ -118,6 +118,9 @@
 
                                                     <td onclick="window.location='{{route('addreservation_home',['date'=>$periode['date_jour']])}}'">
                                                         <div style="display: block;width: 100%;height: 100%">
+                                                            <div class="containerbackground">
+                                                                {{$body['line']}}
+                                                            </div>
                                                             <a href="{{route('addreservation_home',['date'=>$periode['date_jour']])}}">
                                                                 @foreach($periode['agenda'] as $agenda)
                                                                     <span title="{{$agenda['status']}}" class="label  btn-sm
@@ -157,6 +160,9 @@
 
                                                     <td onclick="window.location='{{route('addreservation_home',['date'=>$periode['date_jour']])}}'">
                                                         <div style="display: block;width: 100%;height: 100%">
+                                                            <div class="containerbackground">
+                                                                {{$body['line']}}
+                                                            </div>
                                                             <a href="{{route('addreservation_home',['date'=>$periode['date_jour']])}}">
                                                                 @foreach($periode['agenda'] as $agenda)
                                                                     <span title="{{$agenda['status']}}"
@@ -195,6 +201,9 @@
 
                                                     <td @if(!is_null($periode)) onclick="window.location='{{route('addreservation_home',['date'=>$periode['date_jour']])}}'" @endif>
                                                         <div style="display: block;width: 100%;height: 100%">
+                                                            <div class="containerbackground">
+                                                                {{$body['line']}}
+                                                            </div>
                                                             <a href="{{route('addreservation_home',['date'=>$periode['date_jour']])}}">
                                                                 @foreach($periode['agenda'] as $agenda)
                                                                     <span title="{{$agenda['status']}}"
