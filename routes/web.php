@@ -100,6 +100,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('typesalle/{id}/delete', [ConfigController::class, 'typesalledelete'])->name('typesalledelete');
     Route::match(array('GET','POST'),'typesalle/{id}/edit', [ConfigController::class, 'typesalleedit'])->name('typesalleedit');
 
+    Route::get('groupelocal/{id}/{gestionaire_id}/remove', [ConfigController::class, 'groupelocalremove'])->name('groupelocalremove');
     Route::get('groupelocal/{id}/delete', [ConfigController::class, 'groupelocaldelete'])->name('groupelocaldelete');
     Route::match(array('GET','POST'),'groupelocal/{id}/gestionnaire', [ConfigController::class, 'groupelocalgestionnaire'])->name('groupelocalgestionnaire');
 

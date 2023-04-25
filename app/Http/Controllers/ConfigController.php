@@ -220,9 +220,9 @@ class ConfigController extends Controller
         $gestionnaires=Gestionnaire::query()->join('users','users.id','=','gestionnaire.user_id')->pluck('users.first_name','gestionnaire.id');
         $list=[];
         if ($request->method()=="POST"){
-            $list=$groupe->gestionnaires();
+            $list=$groupe->gestionnaires()->attach($request->request->get('gestionnaire'));
           //  $list[]=$request->request->get('gestionnaire');
-            $groupe->gestionnaires()->sync($request->request->get('gestionnaire'));
+            //$groupe->gestionnaires()->sync($request->request->get('gestionnaire'));
             $b_ool = $groupe->save();
             if ($b_ool) {
                 return redirect()->route('groupelocalgestionnaire',['id'=>$id])->withSuccess(__('Save success', ['name' => __('users.store')]));
@@ -236,6 +236,20 @@ class ConfigController extends Controller
             'gestionnaires'=>$gestionnaires,
             'groupe_gestionnaires'=>$groupe->gestionnaires
         ]);
+    }
+    function groupelocalremove($id,$gestionaire_id,Request $request){
+        $groupe = GroupLocal::query()->find($id);
+        $gestionnaires= $groupe->gestionnaires()->detach($gestionaire_id);
+/*        $gestionnaires=  array_filter($gestionnaires,function ($item)use ($gestionaire_id){
+            return $item['id']== $gestionaire_id;
+        });
+        $groupe->gestionnaires()->sync($gestionnaires);*/
+        $b_ool = $groupe->save();
+        if ($b_ool) {
+            return redirect()->route('groupelocalgestionnaire',['id'=>$id])->withSuccess(__('Save success', ['name' => __('users.store')]));
+        } else {
+            return redirect()->route('groupelocalgestionnaire',['id'=>$id])->withErrors(__('update', ['name' => __('users.store')]));
+        }
     }
     /**
      * Delete ressource.

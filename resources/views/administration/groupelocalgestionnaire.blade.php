@@ -12,7 +12,7 @@
                     </div>
                 </div>
                 <div class="card-body px-3">
-                    {{ Form::open(['url' => 'groupelocal/1/gestionnaire','method' => 'post']) }}
+                    {{ Form::open(['url' => "groupelocal/".$groupe->id."/gestionnaire",'method' => 'post']) }}
                     <div class="row">
                         <div class="form-group col-md-6">
                             <label class="form-label">Gestionnaires</label>
@@ -34,7 +34,7 @@
                             @foreach($groupe_gestionnaires as $gestionnaire)
                             <tr>
                                 <td>{{$gestionnaire->account->first_name}} {{$gestionnaire->account->last_name}}</td>
-                                <td><a class="btn btn-danger">remove</a></td>
+                                <td><a class="btn btn-sm btn-danger" href="{{route('groupelocalremove',['id'=>$groupe->id,'gestionaire_id'=>$gestionnaire->id])}}">remove</a></td>
                             </tr>
                             @endforeach
 
