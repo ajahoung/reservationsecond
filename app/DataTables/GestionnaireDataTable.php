@@ -7,6 +7,7 @@ namespace App\DataTables;
 use App\Models\Gestionnaire;
 use Illuminate\Database\Eloquent\Builder;
 use Yajra\DataTables\Html\Button;
+use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Services\DataTable;
 
 class GestionnaireDataTable extends DataTable
@@ -24,7 +25,14 @@ class GestionnaireDataTable extends DataTable
             ->eloquent($query)
             ->editColumn('created_at', function ($query) {
                 return date('Y/m/d', strtotime($query->created_at));
-            });
+            })        ->addColumn('action', function ($query) {
+
+                return '<div class="btn-group btn-group-sm">
+               <a class="btn btn-sm btn-success" href="' . route('gestionnairedit', ['id' => $query->id]) . '">Modifier</a>
+                </div>';
+
+            })
+            ->rawColumns(['action', 'status']);
     }
 
     /**
@@ -77,6 +85,12 @@ class GestionnaireDataTable extends DataTable
             ['data' => 'account.last_name', 'name' => 'Last name', 'title' => 'Last name'],
             ['data' => 'account.phone_number', 'name' => 'Phone', 'title' => 'Phone'],
             ['data' => 'created_at', 'name' => 'Date creation', 'title' => 'Date creation'],
+            Column::computed('action')
+                ->exportable(false)
+                ->printable(false)
+                ->searchable(false)
+                ->width(60)
+                ->addClass('text-center hide-search'),
 
         ];
     }

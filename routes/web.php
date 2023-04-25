@@ -83,6 +83,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 
     Route::resource('gestionnaires', GestionnaireController::class);
+    Route::match(array('GET','POST'),'gestionnaires/{id}/gestionnairedit', [GestionnaireController::class, 'gestionnairedit'])->name('gestionnairedit');
     Route::post('gestionnaires/store', [GestionnaireController::class, 'store'])->name('gestionnaires.store');
 
     Route::get('local/{id}/delete', [ConfigController::class, 'localdelete'])->name('localdelete');

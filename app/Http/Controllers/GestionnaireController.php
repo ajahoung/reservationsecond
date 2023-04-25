@@ -75,4 +75,29 @@ class GestionnaireController extends Controller
         }
 
     }
+    public function gestionnairedit($id,Request $request){
+        $gestionnaire=Gestionnaire::query()->find($id);
+        if ($request->method()=="POST"){
+            $user=User::query()->find($gestionnaire->user_id);
+            $user->update([
+                'first_name'=>$request->request->get('first_name'),
+                'phone_number'=>$request->request->get('phone_number'),
+                'email'=>$request->request->get('email'),
+                'last_name'=>$request->request->get('last_name'),
+            ]);
+            $b_ool = $gestionnaire->update(
+                [   'address'=>$request->request->get('address'),
+                ]
+
+            );
+            if ($b_ool) {
+                return redirect()->route('gestionnaires.index')->withSuccess(__('Save success', ['name' => __('users.store')]));
+            } else {
+                return redirect()->route('gestionnaires.index')->withErrors(__('message.msg_added', ['name' => __('users.store')]));
+            }
+        }
+        return view('administration.edit_gestionnaire', [
+            'gestionnaire'=>$gestionnaire,
+        ]);
+    }
 }

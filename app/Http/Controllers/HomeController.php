@@ -468,12 +468,8 @@ class HomeController extends Controller
                 'status'=>true,
                 'message'=>'Reservation enregistrée avec success'
             ];
-            $user=User::query()->find('id')->get();
-            $data_ = array('name' => $user->name, 'content' => "Votre reservation est enregistreé avec success et est en cours de traitement");
-            Mail::send(['text' => 'mail'], $data_, function ($message) use ($user) {
-                $message->to($user->email, $user->name)->subject("Creation reservation");
-                $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
-            });
+
+                     $this->sendMail($reservation);
         }else{
             $res=[
                 'status'=>false,
@@ -544,6 +540,7 @@ class HomeController extends Controller
         }
         if ($bool){
             $this->generateReservation($reservation);
+            $this->sendMailUpdate($reservation);
         }
 
         return redirect()->route('listreservation')->withSuccess('Update successful!');
@@ -682,6 +679,7 @@ class HomeController extends Controller
             'status' => Reservation::DENIED,
             'gestionnaire_id' => is_null($gestionnaire) ? null : $gestionnaire->id
         ]);
+        $this->sendMailUpdate($reservation);
         return redirect()->route('listreservation')->withSuccess('Update successful!');
     }
 
@@ -766,14 +764,36 @@ class HomeController extends Controller
     public function sendMail(Reservation $reservation)
     {
         $group=GroupLocal::query()->find($reservation->group_local_id);
-        $gestionnaires=$group->gestionnaires();
+        $gestionnaires=$group->gestionnaires;
         $receives=[];
         foreach ($gestionnaires as $gestionnaire){
-            $receives[]=[$gestionnaire->user->email];
+            $data_ = array('name' => $gestionnaire->account->first_name,
+                'content' => "Nouvelle reservation effectue par ".$reservation->user->first_name,
+                'reservation'=>$reservation);
+
+            Mail::send(['text' => 'mail'], $data_, function ($message) use ($gestionnaire) {
+                $message->to($gestionnaire->account->email, $gestionnaire->account->first_name)->subject("Creation reservation");
+                $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
+            });
         }
-        Mail::to($receives)
+     /*   Mail::to($receives)
             ->cc($reservation->user())
-            ->send(new \App\Mail\reservation($reservation));
+            ->send(new \App\Mail\reservation($reservation));*/
+
+    }
+    public function sendMailUpdate(Reservation $reservation)
+    {
+
+            $data_ = array('name' => $reservation->user->first_name,
+                'content' => "Votre reservation a changé de status".$reservation->user->first_name,
+                'reservation'=>$reservation);
+
+            Mail::send(['text' => 'mailupdate'], $data_, function ($message) use ($reservation) {
+                $message->to($reservation->user->email, $reservation->user->first_name)->subject("Modification reservation");
+                $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
+            });
+
+
     }
 
 }
