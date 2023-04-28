@@ -64,6 +64,7 @@ class GestionnaireController extends Controller
         $account->password=bcrypt('12345');
         $account->username=$request->email;
         $account->save();
+        $account->assignRole("manager");
         $personnel=new Gestionnaire();
         $personnel->address=$request->address;
         $personnel->account()->associate($account);

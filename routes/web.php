@@ -50,7 +50,10 @@ Route::group(['prefix' => 'icons'], function() {
 });
 Route::group(['middleware' => 'permission:role'], function () {
     // Users Module
-    Route::resource('users', UserController::class);
+   // Route::resource('users', UserController::class);
+    Route::get('users', [UserController::class, 'index'])->name('users.index');
+    Route::get('users/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
+    Route::get('users/{id}/update', [UserController::class, 'update'])->name('users.update');
 });
 Route::group(['middleware' => 'role:super_admin|admin'], function () {
     Route::match(array('GET','POST'),'/rapport_occupation', [RapportController::class, 'index'])->name('rapport.index');
@@ -65,6 +68,9 @@ Route::group(['middleware' => 'role:super_admin|admin'], function () {
 
 });
 Route::group(['middleware' => 'auth'], function () {
+    Route::post('users/changepasse', [UserController::class, 'changepasse'])->name('users.changepasse');
+    Route::get('show/{id}', [UserController::class, 'show'])->name('users.show');
+    Route::post('users/profil/{id}', [UserController::class, 'profil'])->name('users.profil');
     // Permission Module
     Route::post('/role-permission-store', [RolePermission::class, 'store'])->name('role.permission.store');
     Route::get('/role-permission', [RolePermission::class, 'index'])->name('role.permission.list');

@@ -44,7 +44,6 @@
                 <span class="item-name"> Mes Reservations </span>
             </a>
         </li>
-
     @if(auth()->user()->hasRole('manager')||auth()->user()->hasRole('admin')||auth()->user()->hasRole('super_admin'))
     <li><hr class="hr-horizontal"></li>
     <li class="nav-item static-item">

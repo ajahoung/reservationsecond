@@ -8,6 +8,7 @@ use App\DataTables\UsersDataTable;
 use App\Models\User;
 use App\Helpers\AuthHelper;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
 use App\Http\Requests\UserRequest;
 
@@ -73,7 +74,7 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        $data = User::with('userProfile','roles')->findOrFail($id);
+        $data = User::with('roles')->findOrFail($id);
 
         $profileImage = getSingleMedia($data, 'profile_image');
 
@@ -88,7 +89,7 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        $data = User::with('userProfile','roles')->findOrFail($id);
+        $data = User::with('roles')->findOrFail($id);
 
         $data['user_type'] = $data->roles->pluck('id')[0] ?? null;
 
@@ -139,7 +140,37 @@ class UserController extends Controller
         return redirect()->back()->withSuccess(__('message.msg_updated',['name' => 'My Profile']));
 
     }
+    public function profil(Request $request, $id)
+    {
+        // dd($request->all());
+        $user = User::with('roles')->findOrFail($id);
+        $user->update([
+            'first_name'=>$request->first_name,
+            'last_name'=>$request->last_name,
+            'phone_number'=>$request->phone_number,
+            'username'=>$user->username,
+            'address'=>$request->address,
+        ]);
 
+        if(auth()->check()){
+            return redirect()->route('dashboard')->withSuccess(__('message.msg_updated',['name' => __('message.user')]));
+        }
+        return redirect()->back()->withSuccess(__('message.msg_updated',['name' => 'My Profile']));
+
+    }
+    public function changepasse(Request $request)
+    {
+       $user=Auth::user();
+        $user->update([
+            'password'=>bcrypt($request->newpassword),
+        ]);
+
+        if(auth()->check()){
+            return redirect()->route('dashboard')->withSuccess(__('message.msg_updated',['name' => __('message.user')]));
+        }
+        return redirect()->back()->withSuccess(__('message.msg_updated',['name' => 'My Profile']));
+
+    }
     /**
      * Remove the specified resource from storage.
      *
