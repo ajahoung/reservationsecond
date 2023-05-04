@@ -526,7 +526,7 @@ class HomeController extends Controller
                 // ->where('type_jour_id', '=', $reservation->local_group->type_jour_id)
                 ->where('heure_debut', '=', $begin)->first();
 
-            if (is_null($agenda)) {
+           /* if (is_null($agenda)) {
                 $agenda = CaseAgenda::create([
                     "date_jour" => $reservation->date_reservation,
                     "libelle_jour" => date('D', strtotime($reservation->date_reservation)),
@@ -536,7 +536,7 @@ class HomeController extends Controller
                     "type_jour_id" => null,
                 ]);
             }
-            $reservation->agenda()->sync($agenda);
+            $reservation->agenda()->sync($agenda);*/
         }
         if ($bool){
             $this->generateReservation($reservation);
