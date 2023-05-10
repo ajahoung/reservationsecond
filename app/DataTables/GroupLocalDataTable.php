@@ -82,6 +82,7 @@ class GroupLocalDataTable extends DataTable
     protected function getColumns()
     {
         return [
+            ['data' => 'id', 'name' => 'id', 'title' => 'ID','hidden'=>true],
             Column::make('libelle'),
             Column::make('typesalle.type'),
            // ['data' => 'typesalle.type', 'name' => 'Type de salle', 'title' => 'Type de salle'],
