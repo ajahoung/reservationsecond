@@ -14,6 +14,7 @@ use App\Models\Gestionnaire;
 use App\Models\GroupLocal;
 use App\Models\JourFerie;
 use App\Models\LineTypeAccessoire;
+use App\Models\Local;
 use App\Models\Periode;
 use App\Models\Reservation;
 use App\Models\TypeAccessoire;
@@ -63,7 +64,7 @@ class HomeController extends Controller
             ];
         }
         $groupes = GroupLocal::all();
-        $salles = TypeSalle::all();
+        $salles = Local::all();
         foreach ($salles as $salle) {
             $line_reservation = [];
             $line_reservation_week = [];
@@ -117,17 +118,17 @@ class HomeController extends Controller
                 ];
             }
             $bodys[] = [
-                'line' => $salle->type,
+                'line' => $salle->libelle,
                 'line_id' => $salle->id,
                 'occupations' => $line_reservation
             ];
             $body_weeks[] = [
-                'line' => $salle->type,
+                'line' => $salle->libelle,
                 'line_id' => $salle->id,
                 'occupations' => $line_reservation_week
             ];
             $body_days[] = [
-                'line' => $salle->type,
+                'line' => $salle->libelle,
                 'line_id' => $salle->id,
                 'occupations' => $line_reservation_day
             ];
