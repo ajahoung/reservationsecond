@@ -14,16 +14,17 @@ $(function () {
         datet=formatDate(datev);
         window.location=configs.routes.index+"?date_start="+datet;
     }
-
+    var currencyDate=Date.now();
+    console.log(currencyDate)
     var defaultConfig = {
         weekDayLength: 1,
         date: datet,
         onClickDate: selectDate,
         showYearDropdown: true,
         startOnMonday: true,
-        min:new Date()
+        min:formatDate(new Date(currencyDate))
     };
-
+console.log(defaultConfig)
     var calendar = $('#calendar-wrapper').calendar(defaultConfig);
     function formatDate(date) {
         var d = new Date(date),

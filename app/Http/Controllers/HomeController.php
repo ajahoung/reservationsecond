@@ -22,6 +22,7 @@ use App\Models\TypeSalle;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Session;
 
 class HomeController extends Controller
 {
@@ -79,6 +80,7 @@ class HomeController extends Controller
                     ->orderBy('start','asc')
                     ->get();
                 $line_reservation[] = [
+                    'dayi' => DateTimeHelper::getWeekDay(new \DateTime($date_jour)),
                     'day' => $date_jour_end,
                     'date_jour' => $date_jour,
                     'agenda' => $reservations,
@@ -93,6 +95,7 @@ class HomeController extends Controller
                     ->where('date_reservation', '<', $day_i . ' 23:00:00')
                     ->orderBy('start','asc')->get();
                 $line_reservation_week[] = [
+                    'dayi' => DateTimeHelper::getWeekDay(new \DateTime($day_i)),
                     'day' => $date_jour_end,
                     'date_jour' => $day_i,
                     'agenda' => $reservations,
@@ -107,6 +110,7 @@ class HomeController extends Controller
                     ->where('date_reservation', '<', $day_i . ' 23:00:00')
                     ->orderBy('start','asc')->get();
                 $line_reservation_day[] = [
+                    'dayi' => DateTimeHelper::getWeekDay(new \DateTime($day_i)),
                     'day' => $date_jour_end,
                     'date_jour' => $day_i,
                     'agenda' => $reservations_,
@@ -425,6 +429,26 @@ class HomeController extends Controller
         $data = json_decode($request->getContent(), true);
         $user_id = $request->user()->id;
         $ob = $data['ob'];
+        $date_time=new \DateTime($data['date_reservation']);
+        if (DateTimeHelper::getWeekDay($date_time)==5||DateTimeHelper::getWeekDay($date_time)==6){
+            Session::flash('error', 'Reservation impossible les weekends!');
+            $res=[
+                'status'=>false,
+                'message'=>'Impossible : Reservation impossible les weekends'
+            ];
+            return response()->json($res);
+        }
+        if ($data['date_reservation']<=date('Y-m-d')){
+            if ($data['start']<=date('h:i')){
+                Session::flash('error', 'periode incorrecte!');
+                $res=[
+                    'status'=>false,
+                    'message'=>'Impossible : periode incorrecte'.date('h:i')
+                ];
+                return response()->json($res);
+            }
+
+        }
         $reservation = Reservation::query()
             ->where('local_id','=',$data['local'])
             ->where('start','=',$data['start'])
@@ -464,6 +488,7 @@ class HomeController extends Controller
                 ]);*/
                 $line_accessoire->save();
             }
+            Session::flash('success', 'Reservation enregistrée avec success!');
             $res=[
                 'status'=>true,
                 'message'=>'Reservation enregistrée avec success'
@@ -471,6 +496,7 @@ class HomeController extends Controller
 
                      $this->sendMail($reservation);
         }else{
+            Session::flash('error', 'reservation deja enregistre!');
             $res=[
                 'status'=>false,
                 'message'=>'Impossible : reservation deja enregistre'

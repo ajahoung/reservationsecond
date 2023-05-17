@@ -76,11 +76,11 @@ class DateTimeHelper {
         }
         return $val;
     }
-    public static function getWeek($day){
+    public static function getWeekDay($day){
         $month = $day->format('m');
         $day_number = $day->format('d');
         $id_var = getdate(mktime(1, 1, 1, $month, $day_number, $day->format('y')));
-
+        return $id_var['wday'];
     }
     public static function daysOfWeekXML($day)
     {

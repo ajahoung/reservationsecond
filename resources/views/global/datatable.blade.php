@@ -26,6 +26,9 @@
 <x-app-layout :assets="$assets ?? []">
 <div>
    <div class="row">
+       @if(Session::has('message'))
+           <p class="alert alert-info">{{ Session::get('message') }}</p>
+       @endif
       <div class="col-sm-12">
          <div class="card">
             <div class="card-header d-flex justify-content-between">

@@ -145,7 +145,7 @@
                                         <th>Salles</th>
                                         @foreach($header_weeks as $periode)
 
-                                            <th>{{ $periode['day'] }}
+                                            <th @if($periode['day']=='SAM'|| $periode['day']=='DIM') style="background-color: #0b2e13 "@endif>{{ $periode['day'] }}
                                                 <span>{{ $periode['number'] }}</span>
                                             </th>
                                         @endforeach
@@ -158,7 +158,7 @@
                                                 </td>
                                                 @foreach($body['occupations'] as $periode)
 
-                                                    <td onclick="window.location='{{route('addreservation_home',['date'=>$periode['date_jour']])}}'">
+                                                    <td @if($periode['dayi']=='6'|| $periode['dayi']=='0') style="background-color: #0b2513 " @endif onclick="window.location='{{route('addreservation_home',['date'=>$periode['date_jour']])}}'">
                                                         <div style="display: block;width: 100%;height: 100%">
                                                             <div class="containerbackground">
                                                                 {{$body['line']}}
@@ -186,7 +186,7 @@
                                         <th>Salles</th>
                                         @foreach($headers as $periode)
 
-                                            <th>{{ $periode['day'] }}
+                                            <th @if($periode['day']=='SAM'|| $periode['day']=='DIM') style="background-color: #0b2e13 "@endif>{{ $periode['day'] }}
                                                 <span>{{ $periode['number'] }}</span>
                                             </th>
                                         @endforeach
@@ -199,7 +199,8 @@
                                                 </td>
                                                 @foreach($body['occupations'] as $periode)
 
-                                                    <td @if(!is_null($periode)) onclick="window.location='{{route('addreservation_home',['date'=>$periode['date_jour']])}}'" @endif>
+                                                    <td  @if($periode['dayi']=='6'|| $periode['dayi']=='0') style="background-color: #0b2513 " @endif @if(!is_null($periode)) onclick="window.location='{{route('addreservation_home',['date'=>$periode['date_jour']])}}'" @endif>
+
                                                         <div style="display: block;width: 100%;height: 100%">
                                                             <div class="containerbackground">
                                                                 {{$body['line']}}

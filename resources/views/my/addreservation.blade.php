@@ -226,8 +226,8 @@
                         </div>
                     </div>
                     <div class="card-body px-3">
-                        <h4 class="badge badge-lg btn-success" id="contegeant">Reservation pendant periode contengeant </h4>
-                        <h4 class="badge badge-lg btn-danger" id="hors_contegeant">Reservation pendant periode hors contengeant </h4>
+                        <h4 class="badge badge-lg btn-success" id="contegeant">Reservation pendant periode contengiant </h4>
+                        <h4 class="badge badge-lg btn-danger" id="hors_contegeant">Reservation pendant periode hors contengiant </h4>
                         <div class="row" id="step-1">
                             <div class="col-md-4">
                                 <label class="form-label" for="r_time">Date de reservation: </label>
