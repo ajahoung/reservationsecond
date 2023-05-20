@@ -690,6 +690,8 @@ class HomeController extends Controller
                 }
 
             }
+        }else{
+
         }
     }
     public function annulerreservation(Request $request)

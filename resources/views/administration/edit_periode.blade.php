@@ -38,6 +38,11 @@
                             {{ Form::radio('frequence', old('frequence',4), ['class' => 'form-control','id' => 'libelle', 'placeholder' => "", 'required']) }}
                             <label class="form-label">Tous les Weekends</label>
                         </div>
+                        <div class="form-group col-md-3">
+                            {{ Form::radio('frequence', old('frequence',5), ['class' => 'form-control','id' => 'libelle', 'placeholder' => "", 'required']) }}
+                            <label class="form-label">Sans periodicité</label>
+                        </div>
+
                      </div>
 
                 </div>
