@@ -25,7 +25,7 @@ class AccessoireDataTable extends DataTable
 
                 return '<div class="btn-group btn-group-sm">
                <a class="btn btn-sm btn-success" href="' . route('typeaccessoireedit', ['id' => $query->id]) . '">Modifier</a>
-                 <a class="btn btn-sm btn-danger" href="' . route('typeaccessoiredelete', ['id' => $query->id]) . '">>Supprimer</a></div>';
+                 <a class="btn btn-sm btn-danger" href="' . route('typeaccessoiredelete', ['id' => $query->id]) . '">Supprimer</a></div>';
 
             })
             ->rawColumns(['action', 'status']);;

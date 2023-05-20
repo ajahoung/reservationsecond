@@ -301,8 +301,9 @@ class ConfigController extends Controller
      */
     public function typeaccessoiredelete($id,Request $request)
     {
-        $groupe = TypeSalle::query()->find($id);
-        $b_ool =false;
+        $groupe = TypeAccessoire::query()->find($id);
+
+        $b_ool =$groupe->delete();
         if ($b_ool) {
             return redirect()->route('config.indextypeaccessoire')->withSuccess(__('Save success', ['name' => __('users.store')]));
         } else {

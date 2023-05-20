@@ -310,13 +310,14 @@ class HomeController extends Controller
             $start=$request->get('start');
             $end=$request->get('end');
             $date_reservation=$request->get('date');
+            $group = GroupLocal::query()->firstWhere('type_salle_id', '=', $salle)
+                ->where('type_jour_id', '=', $typejour)->getModel();
             $reservation=Reservation::query()->where('start','=',$start)
-               // ->where('end','=',$end)
+                ->where('group_local_id','=',$group->id)
                 ->where('date_reservation', '=', $date_reservation. ' 00:00:00')
                 //->where('date_reservation', '<', $date_reservation . ' 23:00:00')
                 ->first();
-            $group = GroupLocal::query()->firstWhere('type_salle_id', '=', $salle)
-                ->where('type_jour_id', '=', $typejour)->getModel();
+
             $locals = $group->locals()->get()->toArray();
             if(!is_null($reservation)){
               $locals=  array_filter($locals,function ($tem) use ($reservation){
