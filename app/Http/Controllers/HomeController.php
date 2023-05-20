@@ -432,7 +432,7 @@ class HomeController extends Controller
         $ob = $data['ob'];
         $date_time=new \DateTime($data['date_reservation']);
         if (DateTimeHelper::getWeekDay($date_time)==5||DateTimeHelper::getWeekDay($date_time)==6){
-            Session::flash('error', 'Reservation impossible les weekends!');
+            Session::flash('error', 'Impossible de faire la reservation aprés l\'heure!');
             $res=[
                 'status'=>false,
                 'message'=>'Impossible : Reservation impossible les weekends'

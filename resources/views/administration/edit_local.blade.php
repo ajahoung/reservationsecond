@@ -30,7 +30,7 @@
                 </div>
                 <div class="card-footer">
                     <button type="submit" class="col-md-2 btn btn-primary" data-bs-dismiss="modal">Save</button>
-                    <button type="button" class="col-md-2 btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                    <a href="{{route('config.indexlocal')}}" type="button" class="col-md-2 btn btn-danger" >Cancel</a>
 
                 </div>{{ Form::close() }}
             </div>
