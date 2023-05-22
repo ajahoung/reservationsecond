@@ -570,7 +570,7 @@ class HomeController extends Controller
         }
         if ($bool){
             $this->generateReservation($reservation);
-          //  $this->sendMailUpdate($reservation);
+            $this->sendMailUpdate($reservation);
         }
 
         return redirect()->route('listreservation')->withSuccess('Update successful!');
