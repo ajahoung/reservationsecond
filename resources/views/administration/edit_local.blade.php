@@ -21,7 +21,13 @@
                         </div>
                         <div class="form-group col-md-12">
                             <label class="form-label">Groupes locaux</label>
-                            {{ Form::select('group_local', $values,null, ['multiple'=>'multiple','name'=>'group_locals[]','class' => 'form-select','id' => 'lastname', 'required']) }}
+                            <select name="group_locals[]" multiple class="form-select">
+                                @foreach($values as $type)
+                                    <option data-aos="{{json_encode($local->group_locals->toArray())}}" value="{{$type->id}}" {{in_array($type->id,$local->group_locals->toArray())?'selected':''}}>
+                                        {{$type->libelle}}</option>
+                                @endforeach
+                            </select>
+                            {{--{{ Form::select('group_local', $values,null, ['multiple'=>'multiple','name'=>'group_locals[]','class' => 'form-select','id' => 'lastname', 'required']) }}--}}
                         </div>
                     </div>
                     <div class="row">

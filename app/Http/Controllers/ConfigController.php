@@ -351,7 +351,8 @@ class ConfigController extends Controller
                 return redirect()->route('config.indexlocal')->withErrors(__('message.msg_added', ['name' => __('users.store')]));
             }
         }
-        $values=GroupLocal::all()->pluck('libelle','id');
+       // $values=GroupLocal::all()->pluck('libelle','id');
+        $values=GroupLocal::all();
         $exitgroup=$local->group_locals;
         return view('administration.edit_local', [
             'values'=>$values,
@@ -543,6 +544,7 @@ class ConfigController extends Controller
     {
         $periode = new Periode();
         $periode->libelle = $request->libelle;
+        $periode->frequence = $request->frequence;
         $b_ool = $periode->save();
         if ($b_ool) {
             return redirect()->route('config.indexperiode')->withSuccess(__('Save success', ['name' => __('users.store')]));

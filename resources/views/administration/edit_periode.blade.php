@@ -21,25 +21,31 @@
                         </div>
                     </div>
                     <h4>Frequence de repetition</h4>
+
                     <div class="row mt-3">
                         <div class="form-group col-md-3">
-                            {{ Form::radio('frequence',old('frequence',3),  ['class' => 'form-control','id' => 'libelle', 'placeholder' => "", 'required']) }}
+                            <input type="radio" value="3" name="frequence" {{$periode->frequence==3? 'checked': ''}}>
+                           {{-- {{ Form::radio('frequence',old('frequence',3),  ['class' => 'form-control','id' => 'libelle', 'placeholder' => "", 'required']) }}--}}
                             <label class="form-label">Chaque Jour</label>
                         </div>
                         <div class="form-group col-md-3">
-                            {{ Form::radio('frequence',old('frequence',2), ['class' => 'form-control','id' => 'libelle', 'placeholder' => "", 'required']) }}
+                            <input  type="radio" value="2" name="frequence" {{$periode->frequence==2? 'checked': ''}}>
+                            {{--{{ Form::radio('frequence',old('frequence',2), ['class' => 'form-control','id' => 'libelle', 'placeholder' => "", 'required']) }}--}}
                             <label class="form-label">Chaque Semaine</label>
                         </div>
                         <div class="form-group col-md-3">
-                            {{ Form::radio('frequence', old('frequence',1), ['class' => 'form-control','id' => 'libelle', 'placeholder' => "", 'required']) }}
+                            <input  type="radio" value="1" name="frequence" {{$periode->frequence==1? 'checked': ''}}>
+                          {{--  {{ Form::radio('frequence', old('frequence',1), ['class' => 'form-control','id' => 'libelle', 'placeholder' => "", 'required']) }}--}}
                             <label class="form-label">Chaque mois</label>
                         </div>
                         <div class="form-group col-md-3">
-                            {{ Form::radio('frequence', old('frequence',4), ['class' => 'form-control','id' => 'libelle', 'placeholder' => "", 'required']) }}
+                            <input  type="radio" value="4" name="frequence" {{$periode->frequence==4? 'checked': ''}}>
+                           {{-- {{ Form::radio('frequence', old('frequence',4), ['class' => 'form-control','id' => 'libelle', 'placeholder' => "", 'required']) }}--}}
                             <label class="form-label">Tous les Weekends</label>
                         </div>
                         <div class="form-group col-md-3">
-                            {{ Form::radio('frequence', old('frequence',5), ['class' => 'form-control','id' => 'libelle', 'placeholder' => "", 'required']) }}
+                            <input  type="radio" value="5" name="frequence" {{$periode->frequence==5? 'checked': ''}}>
+                          {{--  {{ Form::radio('frequence', old('frequence',5), ['class' => 'form-control','id' => 'libelle', 'placeholder' => "", 'required']) }}--}}
                             <label class="form-label">Sans periodicité</label>
                         </div>
 
