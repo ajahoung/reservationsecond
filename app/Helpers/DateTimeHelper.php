@@ -104,4 +104,14 @@ class DateTimeHelper {
         // Concatenate all days in the week in array
         return array_merge($day_week_past, $day_week_futur);
     }
+    public static  function getHoraireReservation($start,$end){
+        $matine="08h25-15h45";
+        $soire="16h00-22h30";
+        $matine_=explode('-',$matine);
+        if ($start<'16h00'){
+            return $matine;
+        }else{
+            return $soire;
+        }
+    }
 }

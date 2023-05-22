@@ -21,7 +21,7 @@
                 url: configs.routes.reservation_getsalle,
                 data: {
                     typesalle: $('#typesalle').val(),
-                    typejour: $('#typejour').val(),
+                    typejour: $('#jour_type').val(),
                     date: $('#r_date').val(),
                     start: $('#r_time').val(),
                     end: $('#r_time_end').val(),

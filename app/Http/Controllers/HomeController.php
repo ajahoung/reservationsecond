@@ -306,11 +306,14 @@ class HomeController extends Controller
         $salle = $request->get('typesalle');
         $typejour = $request->get('typejour');
         if ($request->get('mode') == "getlocal") {
-            $horaire = $request->get('horaire_reservation');
+
             $start=$request->get('start');
             $end=$request->get('end');
+            $horaire = DateTimeHelper::getHoraireReservation($start,$end);
             $date_reservation=$request->get('date');
-            $group = GroupLocal::query()->firstWhere('type_salle_id', '=', $salle)->getModel();
+            $group = GroupLocal::query()->firstWhere('type_salle_id', '=', $salle)
+                ->where('type_jour_id', '=', $typejour)
+                ->where('horaire_reservation', '=', $horaire)->getModel();
             $reservation=Reservation::query()->where('start','=',$start)
                 ->where('group_local_id','=',$group->id)
                 ->where('date_reservation', '=', $date_reservation. ' 00:00:00')
