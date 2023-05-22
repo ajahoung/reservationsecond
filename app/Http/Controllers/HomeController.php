@@ -570,7 +570,7 @@ class HomeController extends Controller
         }
         if ($bool){
             $this->generateReservation($reservation);
-            $this->sendMailUpdate($reservation);
+          //  $this->sendMailUpdate($reservation);
         }
 
         return redirect()->route('listreservation')->withSuccess('Update successful!');
@@ -582,7 +582,8 @@ class HomeController extends Controller
         $current_month=$day_reservation->format('m');
         $current_year=$day_reservation->format('Y');
         $current_day=$day_reservation->format('d');
-        $id_var = getdate(mktime(1, 1, 1, $current_month, $current_day, $current_day));
+        $id_var = getdate(mktime(12, 0, 0, $current_month, $current_day, $current_day));
+        logger(json_encode($id_var));
         $current_week=$day_reservation->format('w');
         $numero_jour=$id_var['wday'];
         if ($periode->frequence==1){//mois
@@ -616,7 +617,12 @@ class HomeController extends Controller
                 ]);
             }
         }elseif ($periode->frequence==2){//semaine
-            for ($i=$current_week;$i>0;$i++){
+            logger("---------------------------------");
+            $init=date('W',strtotime($day_reservation->format('Y-m-d')));
+            $limit=52-$init;
+            logger($numero_jour);
+            logger($init);
+            for ($i=$init+1;$i<=$limit;$i++){
                 $date=new \DateTime();
                 $date->setISODate($current_year,$i,$numero_jour);
                 $conge = JourFerie::query()->where('date_debut', '<=', $date)

@@ -256,7 +256,8 @@
                         @if(is_null($conge))
                             <h4 class="badge badge-lg btn-success">Reservation pendant periode contingent </h4>
                         @else
-                        <h4 class="badge badge-lg btn-danger">Reservation pendant periode hors contingent: $conge->libelle </h4>
+                        <h4 class="badge badge-lg btn-danger">Reservation pendant periode hors contingent:
+                            {{$conge->libelle}} </h4>
                         @endif
                         <div class="row" id="step-1">
                             <div class="col-md-6" hidden>
