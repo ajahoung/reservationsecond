@@ -438,7 +438,7 @@ class HomeController extends Controller
         $ob = $data['ob'];
         $date_time=new \DateTime($data['date_reservation']);
         if (DateTimeHelper::getWeekDay($date_time)==5||DateTimeHelper::getWeekDay($date_time)==6){
-            Session::flash('error', 'Impossible de faire la reservation aprés l\'heure!');
+            Session::flash('error', "Impossible de faire la reservation aprés l'heure!");
             $res=[
                 'status'=>false,
                 'message'=>'Impossible : Reservation impossible les weekends'
@@ -446,11 +446,11 @@ class HomeController extends Controller
             return response()->json($res);
         }
         if ($data['date_reservation']<=date('Y-m-d')){
-            if ($data['start']<=date('h:i')){
-                Session::flash('error', 'periode incorrecte!');
+            if ($data['start']<=date('H:i')){
+                Session::flash('error', "Impossible de faire la reservation aprés l'heure!");
                 $res=[
                     'status'=>false,
-                    'message'=>'Impossible : periode incorrecte'.date('h:i')
+                    'message'=>'Impossible : periode incorrecte'.date('H:i')
                 ];
                 return response()->json($res);
             }
