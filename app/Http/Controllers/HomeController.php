@@ -8,6 +8,7 @@ use App\DataTables\ReservationWaitingDataTable;
 use App\Helpers\AuthHelper;
 use App\Helpers\DateTimeHelper;
 use App\Helpers\DurationHelper;
+use App\Mail\reservation as MailReservation;
 use App\Models\CaseAgenda;
 use App\Models\Commentaire;
 use App\Models\Gestionnaire;
@@ -314,23 +315,25 @@ class HomeController extends Controller
             $group = GroupLocal::query()->firstWhere('type_salle_id', '=', $salle)
                 ->where('type_jour_id', '=', $typejour)
                 ->where('horaire_reservation', '=', $horaire)->getModel();
-            $reservation=Reservation::query()->where('start','=',$start)
+            $reservations=Reservation::query()->where('start','=',$start)
                 ->where('group_local_id','=',$group->id)
                 ->where('date_reservation', '=', $date_reservation. ' 00:00:00')
-                //->where('date_reservation', '<', $date_reservation . ' 23:00:00')
-                ->first();
+               // ->where('end', '=',  $end)
+                ->get();
 
             $locals = $group->locals()->get()->toArray();
-            if(!is_null($reservation)){
+            $locals_=[];
+            if(!is_null($reservations)){
+                foreach($reservations as $reservation)
               $locals=  array_filter($locals,function ($tem) use ($reservation){
                  // return in_array($tem,res)
-                    return $tem ==$reservation->local();
+                    return $tem['id'] !==$reservation->local->id;
                 });
             }
 
             return response()->json([
                 'locals' => $locals,
-                'exemple'=>$reservation,
+                'exemple'=>$reservations,
                 'group_id' => $group->id,
             ]);
         } elseif ($request->get('mode') == "getsalle") {
@@ -624,7 +627,7 @@ class HomeController extends Controller
             logger($init);
             for ($i=$init+1;$i<=$limit;$i++){
                 $date=new \DateTime();
-                $date->setISODate($current_year,$i,$numero_jour);
+                $date->setISODate($current_year,$i,$numero_jour+1);
                 $conge = JourFerie::query()->where('date_debut', '<=', $date)
                     ->where('date_fin', '>=', $date)->first();
                 if ($conge) {
