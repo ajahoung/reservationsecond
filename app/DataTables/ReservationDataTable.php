@@ -135,6 +135,7 @@ class ReservationDataTable extends DataTable
             ['data' => 'local_group.typesalle', 'name' => 'group_local_id', 'title' => 'Type salle'],
             ['data' => 'local.libelle', 'name' => 'local.libelle', 'title' => 'Local'],
             ['data' => 'date_reservation', 'name' => 'date_reservation', 'title' => 'Date reservation'],
+            ['data' => 'periode.libelle', 'name' => 'periode_id', 'title' => 'Periodicite'],
             Column::computed('action')
                 ->exportable(false)
                 ->printable(false)
