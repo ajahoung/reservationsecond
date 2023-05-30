@@ -42,9 +42,6 @@ class AddForeignKey extends Migration
         Schema::table('gestionnaire', function (Blueprint $table) {
             $table->foreign('user_id')->references('id')->on('users');
         });
-        Schema::table('case_agenda', function (Blueprint $table) {
-            $table->foreign('type_jour_id')->references('id')->on('type_jour');
-        });
         Schema::table('line_local_accessoire', function (Blueprint $table) {
             $table->foreign('type_accessoire_id')->references('id')->on('type_accessoire');
             $table->foreign('local_id')->references('id')->on('local');
