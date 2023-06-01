@@ -204,7 +204,7 @@ class ConfigController extends Controller
     public function creategrouplocal(Request $request)
     {
         $salles=TypeSalle::all()->pluck('type','id');
-        $jours=TypeJour::all()->pluck('type','id');
+        $jours=[];
         $view = view('administration.form-grouplocal',compact('salles','jours'))->render();
         return response()->json(['data' => $view, 'status' => true]);
     }
@@ -445,7 +445,7 @@ class ConfigController extends Controller
     {
         $groupe = new GroupLocal();
         $groupe->type_salle_id = $request->type_salle;
-        $groupe->type_jour_id = $request->type_jour;
+        $groupe->type_jour = $request->type_jour;
         $groupe->libelle = $request->libelle;
         $groupe->horaire_reservation = $request->horaire_reservation;
         $b_ool = $groupe->save();

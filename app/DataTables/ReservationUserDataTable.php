@@ -48,7 +48,7 @@ class ReservationUserDataTable extends DataTable
             ->editColumn('local_group.typejour', function ($query) {
                 $group = GroupLocal::query()->find($query->group_local_id);
                 //$typejour = $group->type_jour_id;
-                switch ($group->type_jour_id){
+                switch ($group->type_jour){
                     case 1:
                         $typejour="Jours scolaire";
                         break;

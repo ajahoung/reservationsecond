@@ -588,7 +588,7 @@ class HomeController extends Controller
         $current_month=$day_reservation->format('m');
         $current_year=$day_reservation->format('Y');
         $current_day=$day_reservation->format('d');
-        $id_var = getdate(mktime(12, 0, 0, $current_month, $current_day, $current_day));
+        $id_var = getdate(mktime(12, 0, 0, $current_month, $current_day, $current_year));
         logger(json_encode($id_var));
         $current_week=$day_reservation->format('w');
         $numero_jour=$id_var['wday'];
@@ -630,7 +630,7 @@ class HomeController extends Controller
             logger($init);
             for ($i=$init+1;$i<=$limit;$i++){
                 $date=new \DateTime();
-                $date->setISODate($current_year,$i,$numero_jour+1);
+                $date->setISODate($current_year,$i,$numero_jour);
                 $conge = JourFerie::query()->where('date_debut', '<=', $date)
                     ->where('date_fin', '>=', $date)->first();
                 if ($conge) {
