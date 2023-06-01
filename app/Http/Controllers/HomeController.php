@@ -440,7 +440,7 @@ class HomeController extends Controller
         $user_id = $request->user()->id;
         $ob = $data['ob'];
         $date_time=new \DateTime($data['date_reservation']);
-        if (DateTimeHelper::getWeekDay($date_time)==5||DateTimeHelper::getWeekDay($date_time)==6){
+        if (DateTimeHelper::getWeekDay($date_time)==0||DateTimeHelper::getWeekDay($date_time)==6){
             Session::flash('error', "Impossible de faire la reservation aprés l'heure!");
             $res=[
                 'status'=>false,
@@ -450,7 +450,7 @@ class HomeController extends Controller
         }
         if ($data['date_reservation']<=date('Y-m-d')){
             if ($data['start']<=date('H:i')){
-                Session::flash('error', "Impossible de faire la reservation aprés l'heure!");
+                Session::flash('error', "Impossible de faire la reservation5 aprés l'heure!");
                 $res=[
                     'status'=>false,
                     'message'=>'Impossible : periode incorrecte'.date('H:i')
