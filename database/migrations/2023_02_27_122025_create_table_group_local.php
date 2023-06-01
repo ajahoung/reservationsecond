@@ -18,7 +18,7 @@ class CreateTableGroupLocal extends Migration
             $table->string("libelle");
             $table->string("horaire_reservation");
             $table->foreignId("type_salle_id");
-            $table->integer("type_jour_id");
+            $table->integer("type_jour");
             $table->timestamps();
         });
     }

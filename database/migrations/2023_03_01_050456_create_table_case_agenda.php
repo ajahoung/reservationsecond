@@ -18,7 +18,7 @@ class CreateTableCaseAgenda extends Migration
             $table->string("libelle_jour");
             $table->string("date_jour");
             $table->string("heure_debut");
-            $table->foreignId("type_jour_id");
+            $table->integer("type_jour");
             $table->timestamps();
         });
     }

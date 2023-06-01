@@ -235,17 +235,19 @@ class HomeController extends Controller
     {
         $accessoires = TypeAccessoire::all();
         $typesalles = TypeSalle::all();
-        $typejours = TypeJour::all();
+       // $typejours = TypeJour::all();
         $periodes = Periode::all();
         return view('my.addreservation', ["periodes" => $periodes, "typesalles" => $typesalles,
-            "accessoires" => $accessoires, "typejours" => $typejours,'date'=>date('Y-m-d')]);
+            "accessoires" => $accessoires,
+            //"typejours" => $typejours,
+            'date'=>date('Y-m-d')]);
     }
 
     public function addreservation_home(Request $request)
     {
         $accessoires = TypeAccessoire::all();
         $typesalles = TypeSalle::all();
-        $typejours = TypeJour::all();
+       // $typejours = TypeJour::all();
         $periodes = Periode::all();
         $date_ = $request->get('date');
         if ($date_<date('Y-m-d')){
@@ -288,7 +290,8 @@ class HomeController extends Controller
             "heurefins" => $heure_fins,
             "heuredebuts" => $heure_debuts,
             "type_jour" => $type_jour,
-            "typejours" => $typejours]);
+            //"typejours" => $typejours
+        ]);
     }
 
     public function startreservation(Request $request)
@@ -313,7 +316,7 @@ class HomeController extends Controller
             $horaire = DateTimeHelper::getHoraireReservation($start,$end);
             $date_reservation=$request->get('date');
             $group = GroupLocal::query()->firstWhere('type_salle_id', '=', $salle)
-                ->where('type_jour_id', '=', $typejour)
+                ->where('type_jour', '=', $typejour)
                 ->where('horaire_reservation', '=', $horaire)->getModel();
             $reservations=Reservation::query()->where('start','=',$start)
                 ->where('group_local_id','=',$group->id)

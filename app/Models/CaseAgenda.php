@@ -15,11 +15,8 @@ class CaseAgenda extends Model
         'libelle_jour',
         'heure_debut',
         'heure_fin',
-        'type_jour_id',
+        'type_jour',
     ];
-    public function type_jour() {
-        return $this->belongsTo(TypeJour::class, 'type_jour_id', 'id');
-    }
     public function reservations() {
         return $this->belongsToMany(Reservation::class,'reservation_case_agenda');
     }
