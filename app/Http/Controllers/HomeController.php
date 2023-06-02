@@ -318,6 +318,7 @@ class HomeController extends Controller
             $group = GroupLocal::query()->firstWhere('type_salle_id', '=', $salle)
                 ->where('type_jour', '=', $typejour)
                 ->where('horaire_reservation', '=', $horaire)->getModel();
+                
             $reservations=Reservation::query()->where('start','=',$start)
                 ->where('group_local_id','=',$group->id)
                 ->where('date_reservation', '=', $date_reservation. ' 00:00:00')
@@ -463,8 +464,9 @@ class HomeController extends Controller
             ->where('local_id','=',$data['local'])
             ->where('start','=',$data['start'])
             ->where('end','=',$data['end'])
-            ->where('date_reservation','=',$data['date_reservation'])
+            ->where('date_reservation','=',$data['date_reservation']. ' 00:00:00')
             ->first();
+            //le code est bon hein
         if (is_null($reservation)){
             $reservation = new Reservation();
             $reservation->local_id = $data['local'];
@@ -639,7 +641,7 @@ class HomeController extends Controller
                     $contegent = "Periode non contegeant";
                 }
                 Reservation::create([
-                    'date_reservation'=>$date,
+                    'date_reservation'=>$date->format('Y-m-d'). ' 00:00:00',
                     'contegent'=>$contegent,
                     'libelle'=>$reservation->libelle,
                     'end'=>$reservation->end ,
@@ -663,7 +665,7 @@ class HomeController extends Controller
                     $contegent = "Periode non contegeant";
                 }
                 Reservation::create([
-                    'date_reservation'=>$date,
+                    'date_reservation'=>$date->format('Y-m-d'). ' 00:00:00',
                     'contegent'=>$contegent,
                     'libelle'=>$reservation->libelle,
                     'end'=>$reservation->end ,
@@ -691,7 +693,7 @@ class HomeController extends Controller
                 }
                 if ($id_var['wday']===6||$id_var['wday']===0){
                     Reservation::create([
-                        'date_reservation'=>$date,
+                        'date_reservation'=>$date->format('Y-m-d'). ' 00:00:00',
                         'contegent'=>$contegent,
                         'libelle'=>$reservation->libelle,
                         'end'=>$reservation->end ,

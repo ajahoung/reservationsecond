@@ -23,7 +23,7 @@ class GroupLocalDataTable extends DataTable
         return datatables()
             ->eloquent($query)
             ->editColumn('type_jour_id', function ($query) {
-                if ($query->type_jour_id==1){
+                if ($query->type_jour==1){
                     return "Jours scolaire";
                 }else{
                     return "Congés & Féries";
