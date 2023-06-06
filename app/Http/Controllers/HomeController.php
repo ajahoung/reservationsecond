@@ -609,7 +609,13 @@ class HomeController extends Controller
                 } else {
                     $contegent = "Periode non contegeant";
                 }
-
+                $reservation_ = Reservation::query()
+                ->where('local_id','=',$reservation->local_id)
+                ->where('start','=',$reservation->start)
+                ->where('date_reservation','=',$day. ' 00:00:00')
+                ->first();
+                if(is_null($reservation_)){
+                   
                 Reservation::create([
                     'date_reservation'=>$day,
                     'contegent'=>$contegent,
@@ -622,7 +628,9 @@ class HomeController extends Controller
                     'local_id'=>$reservation->local_id,
                     'parent_id'=>$reservation->id,
                     'status'=>$reservation->status,
-                ]);
+                ]); 
+                }
+
             }
         }elseif ($periode->frequence==2){//semaine
             logger("---------------------------------");
@@ -640,6 +648,12 @@ class HomeController extends Controller
                 } else {
                     $contegent = "Periode non contegeant";
                 }
+                $reservation_ = Reservation::query()
+                ->where('local_id','=',$reservation->local_id)
+                ->where('start','=',$reservation->start)
+                ->where('date_reservation','=',$date->format('Y-m-d'). ' 00:00:00')
+                ->first();
+                if(is_null($reservation_)){
                 Reservation::create([
                     'date_reservation'=>$date->format('Y-m-d'). ' 00:00:00',
                     'contegent'=>$contegent,
@@ -651,7 +665,7 @@ class HomeController extends Controller
                     'group_local_id'=>$reservation->group_local_id,
                     'local_id'=>$reservation->local_id,
                     'status'=>$reservation->status,
-                ]);
+                ]);}
             }
         }elseif ($periode->frequence==3){//jour
             $number_day=$day_reservation->format('z')+1;
@@ -664,6 +678,12 @@ class HomeController extends Controller
                 } else {
                     $contegent = "Periode non contegeant";
                 }
+                $reservation_ = Reservation::query()
+                ->where('local_id','=',$reservation->local_id)
+                ->where('start','=',$reservation->start)
+                ->where('date_reservation','=',$date->format('Y-m-d'). ' 00:00:00')
+                ->first();
+                if(is_null($reservation_)){
                 Reservation::create([
                     'date_reservation'=>$date->format('Y-m-d'). ' 00:00:00',
                     'contegent'=>$contegent,
@@ -675,7 +695,7 @@ class HomeController extends Controller
                     'group_local_id'=>$reservation->group_local_id,
                     'local_id'=>$reservation->local_id,
                     'status'=>$reservation->status,
-                ]);
+                ]);}
             }
 
         }elseif ($periode->frequence==4){//weekend
@@ -692,6 +712,12 @@ class HomeController extends Controller
                     $contegent = "Periode non contegeant";
                 }
                 if ($id_var['wday']===6||$id_var['wday']===0){
+                    $reservation_ = Reservation::query()
+                    ->where('local_id','=',$reservation->local_id)
+                    ->where('start','=',$reservation->start)
+                    ->where('date_reservation','=',$date->format('Y-m-d'). ' 00:00:00')
+                    ->first();
+                    if(is_null($reservation_)){
                     Reservation::create([
                         'date_reservation'=>$date->format('Y-m-d'). ' 00:00:00',
                         'contegent'=>$contegent,
@@ -703,7 +729,7 @@ class HomeController extends Controller
                         'group_local_id'=>$reservation->group_local_id,
                         'local_id'=>$reservation->local_id,
                         'status'=>$reservation->status,
-                    ]);
+                    ]);}
                 }
 
             }
