@@ -481,9 +481,9 @@ class HomeController extends Controller
             $reservation->status = "PENDING";
             $reservation->parent_id = 0;
             if ($data['jour_type'] == 1) {
-                $reservation->contegent = "Periode contegeant";
+                $reservation->contegent = "Periode contingeant";
             } else {
-                $reservation->contegent = "Periode non contegeant";
+                $reservation->contegent = "Periode non contingeant";
             }
 
             $reservation->date_reservation = $date_;
@@ -638,7 +638,8 @@ class HomeController extends Controller
             $limit=52-$init;
             logger($numero_jour);
             logger($init);
-            for ($i=$init+1;$i<=$limit;$i++){
+            for ($i=$init+1;$i<=52;$i++){
+                logger("---------------------------------".$i);
                 $date=new \DateTime();
                 $date->setISODate($current_year,$i,$numero_jour);
                 $conge = JourFerie::query()->where('date_debut', '<=', $date)
